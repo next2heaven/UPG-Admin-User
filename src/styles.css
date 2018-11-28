@@ -1,2 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+html { background:url(/assets/imgs/bg.jpg) no-repeat center center fixed; background-size: cover; }
+
+.top20 { padding-top:20px; }
+
+
+mat-grid-tile.align-left > .mat-figure { justify-content: flex-start; }
+mat-grid-tile.align-right > .mat-figure { justify-content: flex-end; }
+mat-grid-tile.overflow_vis { overflow:visible !important; }
+
+.text-center { text-align:center; }
+
+
+
+

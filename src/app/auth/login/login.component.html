@@ -1,0 +1,39 @@
+<mat-card class="login_card" @fade>
+  <mat-card-title class="text-center">User Login</mat-card-title>
+  <mat-card-content class="top20">
+    <form [formGroup]="myForm" [hidden]="loginSuccess" (ngSubmit)="submitLogin()">
+      <mat-form-field class="full_width">
+        <input matInput placeholder="Email" formControlName="email">
+        <mat-error *ngIf="email.invalid && email.touched">Email is invalid</mat-error>
+      </mat-form-field>
+    
+      <mat-form-field class="full_width">
+        <input matInput type="password" placeholder="Password" formControlName="password">
+        <mat-hint align="end">Must be at least 6 characters</mat-hint>
+        <mat-error *ngIf="password.invalid">Password is invalid</mat-error>
+      </mat-form-field>
+      
+      <mat-grid-list cols="2" rowHeight="60px">
+        <mat-grid-tile class="align-left overflow_vis">
+          <mat-checkbox 
+            #inpChecker
+            value="1"
+            >Remember Me
+          </mat-checkbox>
+        </mat-grid-tile>
+        <mat-grid-tile class="align-right">
+          <button *ngIf="!loginLoading" [disabled]="myForm.invalid" mat-raised-button color="primary">LOGIN</button>
+          <mat-progress-spinner *ngIf="loginLoading" mode="indeterminate" [diameter]="30"></mat-progress-spinner>
+        </mat-grid-tile>
+      </mat-grid-list>        
+      
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions class="login_actions">
+    <mat-grid-list cols="2" rowHeight="30px">
+      <mat-grid-tile class="align-left"><a routerLink="/login/forgot">Forgot Password?</a></mat-grid-tile>
+      <mat-grid-tile class="align-right"><a routerLink="/register">Register</a></mat-grid-tile>
+    </mat-grid-list>
+  </mat-card-actions>
+</mat-card>

@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -8,14 +6,11 @@ import { Observable } from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'UPG-Admin-User';
-  
-  users: Observable<any[]>;
-  constructor(private db: AngularFirestore) {
-    
+
+  constructor() {
   }
 
   ngOnInit(){
-    this.users = this.db.collection('users').valueChanges();
   }
+
 }

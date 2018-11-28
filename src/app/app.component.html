@@ -1,13 +1,1 @@
-<mat-checkbox 
-  #inpChecker
-  value="1"
-  >Subscribe to news</mat-checkbox>
-
-  <div *ngIf="inpChecker.checked">Show me!</div>
-
-
-  <ul>
-    <li class="text" *ngFor="let item of users | async">
-      {{item.fname}} {{item.lname}}
-    </li>
-  </ul>
+<router-outlet></router-outlet>
