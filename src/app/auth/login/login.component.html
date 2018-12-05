@@ -1,39 +1,52 @@
-<mat-card class="login_card" @fade>
-  <mat-card-title class="text-center">User Login</mat-card-title>
-  <mat-card-content class="top20">
-    <form [formGroup]="myForm" [hidden]="loginSuccess" (ngSubmit)="submitLogin()">
-      <mat-form-field class="full_width">
-        <input matInput placeholder="Email" formControlName="email">
-        <mat-error *ngIf="email.invalid && email.touched">Email is invalid</mat-error>
-      </mat-form-field>
-    
-      <mat-form-field class="full_width">
-        <input matInput type="password" placeholder="Password" formControlName="password">
-        <mat-hint align="end">Must be at least 6 characters</mat-hint>
-        <mat-error *ngIf="password.invalid">Password is invalid</mat-error>
-      </mat-form-field>
-      
-      <mat-grid-list cols="2" rowHeight="60px">
-        <mat-grid-tile class="align-left overflow_vis">
-          <mat-checkbox 
-            #inpChecker
-            value="1"
-            >Remember Me
-          </mat-checkbox>
-        </mat-grid-tile>
-        <mat-grid-tile class="align-right">
-          <button *ngIf="!loginLoading" [disabled]="myForm.invalid" mat-raised-button color="primary">LOGIN</button>
-          <mat-progress-spinner *ngIf="loginLoading" mode="indeterminate" [diameter]="30"></mat-progress-spinner>
-        </mat-grid-tile>
-      </mat-grid-list>        
-      
-    </form>
-  </mat-card-content>
+<div class="auth_bg" @fade></div>
 
-  <mat-card-actions class="login_actions">
-    <mat-grid-list cols="2" rowHeight="30px">
-      <mat-grid-tile class="align-left"><a routerLink="/login/forgot">Forgot Password?</a></mat-grid-tile>
-      <mat-grid-tile class="align-right"><a routerLink="/register">Register</a></mat-grid-tile>
-    </mat-grid-list>
-  </mat-card-actions>
-</mat-card>
+<div class="container">
+  <div class="auth_card" @fade *ngIf="!screenLoading">
+    <h2 class="text-center">User Login</h2>
+    <div class="top20">
+      <div class="alert alert-danger text-center bot20" *ngIf="error_msg > ''">{{ error_msg }}</div>
+      <form [formGroup]="myForm" [hidden]="loginSuccess" (ngSubmit)="submitLogin()">
+        <div class="form-group">
+          <input type="text" placeholder="Email" formControlName="email" class="form-control"
+            [ngClass]="{'is-invalid':email.invalid && email.touched}">
+           <div class="invalid-feedback" *ngIf="email.invalid && email.touched">Email is invalid</div>
+        </div>
+      
+        <div class="form-group">
+          <input type="text" type="password" placeholder="Password" formControlName="password" class="form-control"
+            [ngClass]="{'is-invalid':password.invalid && password.touched}">
+          <div class="invalid-feedback" *ngIf="password.invalid">Password is invalid</div>
+          <small align="end">Must be at least 6 characters</small>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group form-check top7">
+              <input type="checkbox" class="form-check-input" #inpChecker id="rememberme" value="1"> 
+              <label class="form-check-label" for="rememberme">Remember Me</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="btn-group float-right">
+              <button *ngIf="!loading" [disabled]="myForm.invalid" class="btn btn-lrg btn-primary">LOGIN</button>
+              <div *ngIf="loading">loading</div>
+            </div>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+
+    <div class="auth_actions">
+      <div class="row">
+        <div class="col-md-6"><a routerLink="/login/forgot">Forgot Password?</a></div>
+        <div class="col-md-6 text-right"><a routerLink="/register">Register</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  
+<div class="login_loading" @fade *ngIf="screenLoading">
+  loading
+</div>

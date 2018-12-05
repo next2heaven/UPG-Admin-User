@@ -1,0 +1,17 @@
+<div class="container mt-4">
+	<h1>Manage Slides</h1>
+	<p>Zombie ipsum reversus ab viral inferno, nam rick grimes malum cerebro. De carne lumbering animata corpora quaeritis. Summus brains sit​​, morbo vel maleficia? De apocalypsi gorger omero undead survivor dictum mauris. Hi mindless mortuis soulless creaturas, imo evil stalking monstra adventus resi dentevil vultus comedat cerebella viventium. Qui animated corpse.</p>
+		
+	<div class="py-3"><button class="btn btn-primary">Create New Slide</button></div>
+	<ngx-datatable class="bootstrap tbl_fnt_14" width="100%"
+		[rows]="rows"
+		[columns]="columns"
+		[columnMode]="'force'"
+		[headerHeight]="45"
+		[footerHeight]="50"
+		[rowHeight]="'auto'"
+		[sorts]="[{prop: 'created', dir: 'desc'}]"
+		(activate)="onActivate($event)"	
+		>
+	</ngx-datatable>
+</div>

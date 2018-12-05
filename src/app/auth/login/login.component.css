@@ -1,9 +1,7 @@
 .login_card { max-width:320px; margin:150px auto 0 auto; padding:30px 40px 20px 40px; }
 .login_actions { font-size:14px; color:#666; padding-top:30px }
 .full_width { width:100%; }
-.login_card mat-progress-spinner {
-  float:left; 
-  width: 14px; 
-  height: 14px; 
-  margin: 3px 5px 0px 0px;
-}
+.login_card mat-progress-spinner { float:left; width: 14px; height: 14px; margin: 3px 5px 0px 0px; }
+
+
+.login_loading { padding-top:150px; width:70px; margin:0 auto; }

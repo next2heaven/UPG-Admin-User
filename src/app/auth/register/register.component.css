@@ -1,0 +1,5 @@
+.reg_card { max-width:320px; margin:150px auto 0 auto; padding:30px 40px 20px 40px; }
+.reg_actions { font-size:14px; color:#666; padding-top:30px }
+.full_width { width:100%; }
+.reg_card mat-progress-spinner { float:left; width: 14px; height: 14px; margin: 3px 5px 0px 0px; }
+.load_center { margin:0 auto; width:30px; }

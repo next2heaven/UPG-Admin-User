@@ -1,0 +1,41 @@
+/* You can add global styles to this file, and also import other style files */
+/*@import "~@angular/material/prebuilt-themes/indigo-pink.css";*/
+/* @import "~bootstrap/dist/css/bootstrap.css"; */
+*:focus { outline: none !important; }
+body, html { margin:0px; height:100%; }
+body { background:#eaeeee !important; }
+
+
+.auth_bg { background:url(/assets/imgs/bg.jpg) no-repeat center center fixed; background-size: cover; position: fixed; top:0; left:0; width:100%; height: 100%; z-index:-1 }
+
+
+.top5 { margin-top:5px; }
+.top7 { margin-top:7px; }
+.top20 { margin-top:20px; }
+.top30 { margin-top:30px; }
+.top40 { margin-top:40px; }
+.bot20 { margin-bottom:20px }
+
+
+
+/* PAGE */
+
+
+
+/* AUTH */
+.auth_card { max-width:350px; margin:150px auto 0 auto; padding:30px 40px 20px 40px !important; background:#fff; border-radius:5px;
+								box-shadow:0px 0px 4px #777 }
+.auth_actions { font-size:14px; color:#666; padding-top:30px !important }
+.auth_card mat-progress-spinner { float:left; width: 14px; height: 14px; margin: 3px 5px 0px 0px; }
+.load40_center { margin:0 auto; width:30px; }
+
+
+/* Tables */
+.datatable-row-center { cursor: pointer; }
+.datatable-header-cell-label { font-size:15px; font-weight:bold; }
+ngx-datatable.tbl_fnt_14 .datatable-body-cell-label { font-size:14px; }
+ngx-datatable.ngx-datatable.bootstrap { background:#f1f6f6; box-shadow: 0px 0px 2px 1px rgba(0,0,0,.2);  border-radius: 7px; }
+datatable-header{ background:#d1d6d6 }
+.ngx-datatable.bootstrap .datatable-body .datatable-body-row.datatable-row-even { background:rgba(0,0,0,.03) }
+.ngx-datatable.bootstrap .datatable-body .datatable-body-row:hover { background:rgba(0,150,200,.06) }
+.ngx-datatable.bootstrap .datatable-body .datatable-body-row .datatable-body-cell { padding:0.75rem 0.75rem 0.55rem 0.75rem}

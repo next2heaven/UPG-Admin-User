@@ -1,3 +1,67 @@
-<p>
-  register works!
-</p>
+<div class="auth_bg"></div>
+
+<div class="container">
+  <div class="auth_card" @fade>
+    <h1 class="text-center">Registration</h1>
+
+    <div class="top20">
+
+      <!-- FORM -->
+      <div *ngIf="show_reg_form">
+        <div class="alert alert-danger text-center bot20" *ngIf="error_msg > ''">{{ error_msg }}</div>
+        <form [formGroup]="myForm" [hidden]="regSuccess" (ngSubmit)="submitReg()">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="text" placeholder="First Name" formControlName="fname" class="form-control"
+                  [ngClass]="{'is-invalid':fname.invalid && fname.touched}">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="text" placeholder="Last Name" formControlName="lname" class="form-control"
+                  [ngClass]="{'is-invalid':lname.invalid && lname.touched}">
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <input type="text" placeholder="Email" formControlName="email" class="form-control"
+              [ngClass]="{'is-invalid':email.invalid && email.touched}">
+            <div class="invalid-feedback" *ngIf="email.invalid && email.touched">Email is invalid</div>
+          </div>
+        
+          <div class="form-group">
+            <input type="text" type="password" placeholder="Password" formControlName="password" class="form-control"
+              [ngClass]="{'is-invalid':password.invalid && password.touched}">
+            <div class="invalid-feedback" *ngIf="password.invalid && password.touched">Password is invalid</div>
+            <small class="text-right">Must be at least 6 characters</small>
+            <!-- <mat-error *ngIf="password.invalid">Password is invalid</mat-error> -->
+          </div>
+            
+          
+          <div class="text-center top30">
+            <button class="btn btn-lg btn-primary" *ngIf="!loading" [disabled]="myForm.invalid">REGISTER</button>
+            <div class="load40_center" *ngIf="loading">loading</div>
+          </div>
+        </form>
+      </div>
+
+      <!-- MESSAGE -->
+      <div *ngIf="show_reg_success">
+        {{ reg_success_message }}
+      </div>
+
+
+          
+    </div>
+
+    <div class="auth_actions">
+      <div class="row">
+        <div class="col-md-6"><a routerLink="/login/forgot">Forgot Password?</a></div>
+        <div class="col-md-6 text-right"><a routerLink="/login">Back to Login</a></div>
+      </div>
+    </div>
+  </div>
+</div>

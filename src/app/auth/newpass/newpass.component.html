@@ -1,3 +1,33 @@
-<p>
-  newpass works!
-</p>
+<div class="auth_bg"></div>
+
+<div class="container">
+	<div class="auth_card" @fade>
+		<h1 class="text-center">Enter New Password</h1>
+		<div class="top20">
+			<div class="alert alert-danger text-center bot20" *ngIf="error_msg > ''">{{ error_msg }}</div>
+			<form [formGroup]="myForm" (ngSubmit)="submitNewPass()">
+				<div class="text-center bot20">Please enter your new password below</div>	
+
+				<div class="top20">
+					<input type="password" placeholder="New Password" formControlName="new_password" autocomplete="off" class="form-control">
+					<small align="end">Must be at least 6 characters</small>
+					<!-- <small *ngIf="new_password.invalid">Password is invalid</small> -->
+				</div>
+				
+				<div class="text-center top30">
+					<input type="hidden" name="temp_pass" id="temp_pass" value="{{ temp_pass }}">
+					<button class="btn-lg" *ngIf="!loading" [disabled]="myForm.invalid || submitSuccess" mat-raised-button color="primary">{{ submit_but_label }}</button>
+					<div class="load40_center" *ngIf="loading">loading</div>
+				</div>      
+				
+			</form>
+		</div>
+
+		<div class="auth_actions">
+			<div class="row">
+				<div class="row"><a routerLink="/login/forgot">Forgot Password?</a></div>
+				<div class="row"><a routerLink="/login">Back to Login</a></div>
+			</div>
+		</div>
+	</div>
+</div>
