@@ -126,6 +126,7 @@ export class AccountComponent implements OnInit {
 		this.saveLabel = 'Save Changes';
 	}	
 	private saveSuccess(){
+		this.formState = 'success';
 		this.saveLabel = 'Saved Successfully!';
 		setTimeout(() => { this.resetSave(); }, 2000);
 	}	
