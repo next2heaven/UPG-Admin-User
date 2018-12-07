@@ -1,0 +1,158 @@
+<div class="container mt-4">
+	<h1>Edit Profile</h1>
+	<hr>
+<div class="row">
+		<!-- left column -->
+		<div class="col-md-3 text-center">
+			<div class="px-5">
+				<img src="{{ profile?.avatar_url }}" class="img-fluid img-thumbnail rounded-circle" alt="avatar">
+
+				<div class="mt-2">
+					<ngx-uploadcare-widget
+						images-only="true"
+						system-dialog="true"
+						(on-upload-complete)="uploadComplete($event)">test
+					</ngx-uploadcare-widget>
+					<div class="alert alert-danger text-center mt-2" *ngIf="error_PhotoMsg > ''">{{ error_PhotoMsg }}</div>
+				</div>
+
+			</div>
+			<div class="pt-3 profile-sidebar">				
+				<div class="profile-usermenu">
+					<h4>{{ myForm.get('fname').value }} {{ myForm.get('lname').value }}</h4>
+					<div class="mb-3">{{ profile?.access_name | uppercase }}</div>
+					<ul class="nav">
+						<li [class.active]="area==='overview'">
+							<a [routerLink]="['/account']" (click)="changeArea('overview')">
+								<fa name="user" size="lg" fixed="true" class="mr-2"></fa>Overview
+							</a>
+						</li>
+						<li [class.active]="area==='reset'">
+							<a [routerLink]="['/account/reset']" (click)="changeArea('reset')">
+								<fa name="lock" size="lg" fixed="true" class=" mr-2"></fa>Update Password
+							</a>
+						</li>
+						<li [class.active]="area==='billing'">
+							<a [routerLink]="['/account/billing']" (click)="changeArea('billing')">
+								<fa name="credit-card" size="lg" fixed="true" class=" mr-2"></fa>Billing History
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<!-- edit form column -->
+		<div class="col-md-1"></div>
+
+		<!-- LOADING -->
+		<div class="col-md-8 personal-info text-center" *ngIf="loading" @fade>			
+			<img src="/assets/imgs/loading.svg" alt="" style="max-width:200px;">
+		</div>
+
+
+		<div class="col-md-8">
+
+
+			<!-- OVERVIEW -->
+			<div *ngIf="area === 'overview' && !loading">
+				<h3>Personal info</h3>			
+				<div class="alert alert-danger text-center mt-4" *ngIf="error_msg > ''">{{ error_msg }}</div>
+				<form [formGroup]="myForm" [hidden]="loginSuccess" class="form-horizontal mt-4">
+					
+					<div class="form-group row">
+						<label class="col-lg-3 col-form-label">First name:</label>
+						<div class="col-lg-8">
+							<input class="form-control" type="text" formControlName="fname" value="{{ profile?.fname }}"
+								[ngClass]="{'is-invalid':fname.invalid && fname.touched}">
+							<div class="invalid-feedback" *ngIf="fname.invalid">First Name is required</div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-lg-3 col-form-label">Last name:</label>
+						<div class="col-lg-8">
+							<input class="form-control" type="text" formControlName="lname" value="{{ profile?.lname }}"
+							[ngClass]="{'is-invalid':lname.invalid && lname.touched}">
+						<div class="invalid-feedback" *ngIf="lname.invalid">Last Name is required</div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-lg-3 col-form-label">Company:</label>
+						<div class="col-lg-8">
+							<input class="form-control" type="text" formControlName="company" value="{{ profile?.company }}"
+							[ngClass]="{'is-invalid':company.invalid && company.touched}">
+						<div class="invalid-feedback" *ngIf="company.invalid">Company is required</div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-lg-3 col-form-label">Email:</label>
+						<div class="col-lg-8">
+							<input class="form-control" type="text" formControlName="email" value="{{ profile?.email }}"
+							[ngClass]="{'is-invalid':email.invalid && email.touched}">
+						<div class="invalid-feedback" *ngIf="email.invalid">Email is invalid</div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-lg-3 col-form-label">Time Zone:</label>
+						<div class="col-lg-8">
+							<div class="ui-select">
+								<select id="timezone" class="form-control" formControlName="timezone" 
+									[ngClass]="{'is-invalid':timezone.invalid && timezone.touched}">
+									<option value="America/New_York">Eastern</option>
+									<option value="America/Chicago">Central</option>
+									<option value="America/Denver">Mountain</option>
+									<option value="America/Phoenix">Mountain (no DST)</option>
+									<option value="America/Los_Angeles">Pacific</option>
+									<option value="America/Anchorage">Alaska</option>
+									<option value="America/Adak">Hawaii-Aleutian</option>
+									<option value="Pacific/Honolulu">Hawaii-Aleutian (no DST)</option>
+								</select>
+							</div>
+							<div class="invalid-feedback" *ngIf="timezone.invalid">Please choose a Timezone</div>
+						</div>
+					</div>				
+					<div class="form-group row">
+						<label class="col-md-3"></label>
+						<div class="col-md-8 pt-3">
+							<button 
+								type="button" class="btn" value="{{ saveLabel }}"
+								[disabled]="myForm.invalid || formState==='saving'"
+								(click)="saveForm()"
+								[ngClass]="{
+									'btn-primary': formState!=='error',
+									'btn-danger': formState==='error'
+								}">
+									<fa name="spinner" animation="spin" *ngIf="formState==='saving'" class="mr-2"></fa>
+									<fa name="exclamation-circle" *ngIf="formState==='error'" class="mr-2"></fa>
+									{{ saveLabel }}</button>
+						</div>
+					</div>
+				</form>
+			</div>
+
+
+
+			<!-- RESET -->
+			<div *ngIf="area=='reset'">
+				<app-reset></app-reset>
+			</div>
+
+
+
+			<!-- BILLING HISTORY -->
+			<div *ngIf="area=='billing'">
+				<app-billing></app-billing>
+			</div>
+		</div>
+		
+
+
+
+
+
+		
+	</div>
+</div>
+
+
+

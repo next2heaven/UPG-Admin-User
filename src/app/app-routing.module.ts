@@ -1,3 +1,5 @@
+import { BillingComponent } from './core/account/billing/billing.component';
+import { AccountComponent } from './core/account/account.component';
 import { ManageComponent } from './manage/manage/manage.component';
 import { ForgotComponent } from './auth/forgot/forgot.component';
 import { AuthGuard } from './services/guards/auth-guard.service';
@@ -10,6 +12,7 @@ import { NewpassComponent } from './auth/newpass/newpass.component';
 import { SlidesComponent } from './manage/slides/slides/slides.component';
 import { SlideComponent } from './manage/slides/slide/slide.component';
 import { MemberComponent } from './core/member/member.component';
+import { ResetComponent } from './core/account/reset/reset.component';
 
 const routes: Routes = [];
 
@@ -34,6 +37,13 @@ const routes: Routes = [];
             { path: 'slides/slide/:id', component: SlideComponent, canActivate:[AuthGuard] },
           ]
         }, 
+        { path: 'account', component: AccountComponent, canActivate:[AuthGuard],
+          children: [
+            { path: '', component: AccountComponent, canActivate:[AuthGuard]  },
+            { path: 'reset', component: ResetComponent, canActivate:[AuthGuard]  },
+            { path: 'billing', component: BillingComponent, canActivate:[AuthGuard]  },
+          ]
+        },
       ]
     },
    

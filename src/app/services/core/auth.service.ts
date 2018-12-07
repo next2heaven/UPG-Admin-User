@@ -1,10 +1,11 @@
 import { Api_result } from 'src/app/shared/models/api/api.model';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Router, ActivatedRoute } from '@angular/router';
 import { map, catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { preAuthOptions, httpOptions } from './common.service';
+import { ErrorHandlerService } from './error-handler.service';
 
 interface Login_data {
 	'email': string,
@@ -16,25 +17,19 @@ interface Login_data {
 })
 export class AuthService {
 	private logged_in:boolean;
-	private options = { headers: new HttpHeaders().set('Content-Type', 'text/plain') };
-	private token = localStorage.getItem('token');
-	private httpOptions = {
-		headers: new HttpHeaders({
-			'Content-Type':  'application/json',
-			'Authorization': 'Bearer '+this.token,
-		})
-	};
+	
 
 
 	constructor(
 		private http:HttpClient,
 		private route:ActivatedRoute,
-		private router:Router) {    
+		private router:Router,
+		private eh:ErrorHandlerService) {    
 	 }
 
 
 	login(form) {
-		return this.http.post<Api_result>(environment.api_endpoint+'/auth/user/login', form.value, this.options)
+		return this.http.post<Api_result>(environment.api_endpoint+'/auth/user/login', form.value, preAuthOptions)
 			.pipe(map( res => {
 				if(res.hasOwnProperty('status') && res.status == 'success' && res.data.token){
 					// Save Token Locally
@@ -53,7 +48,7 @@ export class AuthService {
 				}  
 				return res;
 			}),
-			catchError(this.handleError)
+			catchError(this.eh.handleError)
 		);
 		
 	}
@@ -64,7 +59,7 @@ export class AuthService {
 	}
 
 	check_user($token){
-		return this.http.get<Api_result>(environment.api_endpoint+'/auth/user/check', this.httpOptions).pipe(map(res => {      
+		return this.http.get<Api_result>(environment.api_endpoint+'/auth/user/check', httpOptions).pipe(map(res => {      
 			if(res.status == 'success') this.logged_in = true;
 			else this.logged_in = false;
 			
@@ -76,41 +71,22 @@ export class AuthService {
 
 
 	register(form){
-		return this.http.post<Api_result>(environment.api_endpoint+'/auth/user/register', JSON.stringify(form.value), this.options)
-			.pipe(catchError(this.handleError));
+		return this.http.post<Api_result>(environment.api_endpoint+'/auth/user/register', JSON.stringify(form.value), preAuthOptions)
+			.pipe(catchError(this.eh.handleError));
 	}
 
 	resetPassword(form){		
-		return this.http.post<Api_result>(environment.api_endpoint+'/auth/forgot', JSON.stringify(form.value), this.options)
-			.pipe(catchError(this.handleError));
+		return this.http.post<Api_result>(environment.api_endpoint+'/auth/forgot', JSON.stringify(form.value), preAuthOptions)
+			.pipe(catchError(this.eh.handleError));
 	}
 
 	updatePass(form){
-		return this.http.post<Api_result>(environment.api_endpoint+'/auth/reset', JSON.stringify(form.value), this.options)
-			.pipe(catchError(this.handleError));
+		return this.http.post<Api_result>(environment.api_endpoint+'/auth/reset', JSON.stringify(form.value), preAuthOptions)
+			.pipe(catchError(this.eh.handleError));
 	}
 
 
 	
 
-
-
-	
-	private handleError(error: HttpErrorResponse) {
-		if(!environment.production){
-			if (error.error instanceof ErrorEvent) {
-				// A client-side or network error occurred. Handle it accordingly.
-				console.error('An error occurred:', error.error.message);
-			} else {
-				// The backend returned an unsuccessful response code.
-				// The response body may contain clues as to what went wrong,
-				console.error(
-					`Backend returned code ${error.status}, ` +
-					`body was: ${error.error}`);
-			}
-		}
-		// return an observable with a user-facing error message
-		return throwError('Site not responding. Please try again later.');
-	};
 
 }

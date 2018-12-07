@@ -1,0 +1,40 @@
+<!-- RESET -->
+<h3>Change Pass</h3>
+<p>Please provide your current password and the password you'd like to change it to.</p>
+
+<div class="alert alert-danger text-center mt-4" *ngIf="error_msg > ''">{{ error_msg }}</div>
+<form [formGroup]="myForm" class="form-horizontal mt-4" role="form">
+	<div class="form-group row">
+		<label class="col-md-3 col-form-label">Password:</label>
+		<div class="col-md-8">
+			<input class="form-control" type="password" formControlName="password" value=""
+				[ngClass]="{'is-invalid':password.invalid && password.touched}">
+			<div class="invalid-feedback" *ngIf="password.invalid">Password must be at least 6 characters</div>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-md-3 col-form-label">Confirm password:</label>
+		<div class="col-md-8">
+			<input class="form-control" type="password" formControlName="conf_password" value=""
+				[ngClass]="{'is-invalid':conf_password.invalid && conf_password.touched}">
+			<div class="invalid-feedback" *ngIf="conf_password.invalid && conf_password.value.length < 6">Password must be at least 6 characters</div>
+			<div class="invalid-feedback" *ngIf="myForm.invalid && conf_password.touched">Passwords must match</div>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-md-3"></label>
+		<div class="col-md-8 pt-3">
+				<button 
+				type="button" class="btn" value="{{ saveLabel }}"
+				[disabled]="myForm.invalid || formState!=='init'"
+				(click)="saveForm()"
+				[ngClass]="{
+					'btn-primary': formState!=='error',
+					'btn-danger': formState==='error'
+				}">
+					<fa name="spinner" animation="spin" *ngIf="formState==='saving'" class="mr-2"></fa>
+					<fa name="exclamation-circle" *ngIf="formState==='error'" class="mr-2"></fa>
+					{{ saveLabel }}</button>
+		</div>
+	</div>
+</form>

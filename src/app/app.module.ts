@@ -1,3 +1,4 @@
+import { ErrorHandlerService } from './services/core/error-handler.service';
 import { AuthGuard } from './services/guards/auth-guard.service';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -23,6 +24,10 @@ import { SlideComponent } from './manage/slides/slide/slide.component';
 import { MemberComponent } from './core/member/member.component';
 import { ManageComponent } from './manage/manage/manage.component';
 import { DashboardComponent } from './core/dashboard/dashboard.component';
+import { AccountComponent } from './core/account/account.component';
+import { ResetComponent } from './core/account/reset/reset.component';
+import { BillingComponent } from './core/account/billing/billing.component';
+import { UcWidgetModule } from 'ngx-uploadcare-widget';
 
 
 @NgModule({
@@ -38,6 +43,9 @@ import { DashboardComponent } from './core/dashboard/dashboard.component';
     SlideComponent,
     MemberComponent,
     ManageComponent,
+    AccountComponent,
+    ResetComponent,
+    BillingComponent,
   ],
   imports: [
     HttpClientModule,
@@ -48,10 +56,12 @@ import { DashboardComponent } from './core/dashboard/dashboard.component';
     ReactiveFormsModule,
     FormsModule,
     NgbModule,
-    NgxDatatableModule
+    NgxDatatableModule,
+    UcWidgetModule
   ],
   providers: [
-    AuthGuard
+		AuthGuard,
+		ErrorHandlerService
   ],
   bootstrap: [AppComponent]
 })

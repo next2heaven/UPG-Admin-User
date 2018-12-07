@@ -1,6 +1,6 @@
+import { fade } from './../../animations';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { trigger, state, transition, style, animate } from '@angular/animations';
 import { AuthService } from 'src/app/services/core/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -8,14 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 	selector: 'app-forgot',
 	templateUrl: './forgot.component.html',
 	styleUrls: ['./forgot.component.css'],
-	animations: [
-		trigger('fade', [
-			state('void', style({ opacity:0 })),
-			transition(':enter, :leave', [
-				animate(500)
-			])
-		])
-	]
+	animations: [ fade ]
 })
 export class ForgotComponent implements OnInit {
 	myForm: FormGroup;

@@ -39,3 +39,14 @@ datatable-header{ background:#d1d6d6 }
 .ngx-datatable.bootstrap .datatable-body .datatable-body-row.datatable-row-even { background:rgba(0,0,0,.03) }
 .ngx-datatable.bootstrap .datatable-body .datatable-body-row:hover { background:rgba(0,150,200,.06) }
 .ngx-datatable.bootstrap .datatable-body .datatable-body-row .datatable-body-cell { padding:0.75rem 0.75rem 0.55rem 0.75rem}
+
+
+    
+.profile-usermenu { background:#fff; border-radius:5px; padding-top:15px; }
+.profile-usermenu .nav { padding-left: 0; margin-bottom: 0; list-style: none; }
+.profile-usermenu .nav>li { position: relative; display: block; width: 100%; text-align: left; }
+.profile-usermenu ul li.active { border-bottom: none; }
+.profile-usermenu ul li.active a { color: #5b9bd1; background-color: #f6f9fb; border-left: 2px solid #5b9bd1; margin-left: -2px; }
+.profile-usermenu ul li a { color: #93a3b5; font-size: 14px; font-weight: 400; }
+.nav>li>a { position: relative; display: block; padding: 10px 15px; }
+.nav { list-style: none; }
