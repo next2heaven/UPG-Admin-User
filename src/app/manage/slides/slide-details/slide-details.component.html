@@ -1,0 +1,21 @@
+<form [formGroup]="myForm">
+	<div class="form-group mt-3">
+		<label for="layer_name" class="col-form-label">Layer Name:</label>
+		<input type="text" class="form-control" autofocus="autofocus" formControlName="layer_name" value=""
+				[ngClass]="{'is-invalid':layer_name.invalid && layer_name.touched}">
+	</div>
+
+	<div class="form-group" [hidden]="layer.type!=='image'">
+		<label for="layer_name" class="col-form-label">Image:</label>
+		<input type="text" class="form-control" autofocus="autofocus" formControlName="img_url" value=""
+			[ngClass]="{'is-invalid':img_url.invalid && img_url.touched}">
+	</div>
+
+	<div class="form-group" [hidden]="layer.type!=='text'">
+		<label for="layer_name" class="col-form-label">Text:</label>
+		<input type="text" class="form-control" autofocus="autofocus" formControlName="text" value=""
+			[ngClass]="{'is-invalid':text.invalid && text.touched}">
+	</div>
+		
+	<button class="btn btn-primary mt-2" (click)="clickedDone($event)">DONE</button>
+</form>

@@ -1,0 +1,105 @@
+<form [formGroup]="myForm" *ngIf="!loading && cur_frame!==-1 && cur_keyframe!==-1">
+  <div class="row mt-3">
+    <div class="col-md-3">
+      <div class="form-group" class="text-center">
+        <label for="scaleX">Delay</label>
+        <input type="text" class="form-control text-center" formControlName="delay" value="0"
+          [ngClass]="{'is-invalid':delay.invalid && delay.touched}">
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group" class="text-center">
+        <label for="X">Time</label>
+        <input type="text" class="form-control text-center" formControlName="time" value="0"
+          [ngClass]="{'is-invalid':time.invalid && time.touched}">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="form-group" class="text-center">
+        <label for="x">X</label>
+        <input type="text" class="form-control text-center" formControlName="x" value="0"
+          [ngClass]="{'is-invalid':x.invalid && x.touched}">
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group" class="text-center">
+        <label for="X">Y</label>        
+        <input type="text" class="form-control text-center" formControlName="y" value="0"
+          [ngClass]="{'is-invalid':y.invalid && y.touched}">
+      </div>
+    </div>
+    <!-- <div class="col-md-3">
+      <div class="form-group" class="text-center">
+        <label for="scaleX">Scale X</label>
+        <input type="text" class="form-control text-center" value="0">
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group" class="text-center">
+        <label for="X">Scale Y</label>
+        <input type="text" class="form-control text-center" value="0">
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-4">
+      <div class="form-group" class="text-center">
+        <label for="X">Pivot X</label>
+        <input type="text" class="form-control text-center" value="0">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group" class="text-center">
+        <label for="X">Pivot Y</label>
+        <input type="text" class="form-control text-center" value="0">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group" class="text-center">
+        <label for="X">Rot</label>
+        <input type="text" class="form-control text-center" value="0">
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <div class="form-group" class="text-center">
+        <label for="X">Delay</label>
+        <input type="text" class="form-control text-center" value="0">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group" class="text-center">
+        <label for="X">Duration</label>
+        <input type="text" class="form-control text-center" value="0">
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <div class="form-group" class="text-center">
+        <label for="X">Ease In</label>
+        <input type="text" class="form-control text-center" value="0">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group" class="text-center">
+        <label for="X">Ease Out</label>
+        <input type="text" class="form-control text-center" value="0">
+      </div>
+    </div> -->
+  </div>
+  <div class="row">
+    <div class="col-md-12 mt-4">
+      <button
+        class="btn btn-primary"
+        (click)="doneEditing()"
+        >DONE</button></div>
+  </div>
+</form>

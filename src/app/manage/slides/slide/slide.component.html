@@ -1,8 +1,110 @@
+<div style="width:1282px; margin:30px auto 0 auto;">
+	<h1>Manage Animated Background</h1>
 
-<div style="width: 500px; height: 500px; margin-top:200px; background-color: lightblue; margin-bottom: 30px;">
-  <img #mushroom
-       src="../assets/imgs/temp_rock.png"
-       style="width: 32px; height: 32px;" />
-</div>
+	<!-- LOADING -->
+	<div class="text-center" *ngIf="loading" @fade>			
+		<img src="/assets/imgs/loading.svg" alt="" style="max-width:200px;">
+	</div>
 
-<button (click)="doIt()">Start</button>
+
+	<div [hidden]="loading">
+		<form [formGroup]="myForm">
+			<div class="form-group row mt-5">
+				<label for="slide_name" class="col-sm-3 col-form-label text-right">Background Name:</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" autofocus="autofocus" formControlName="slide_name" value=""
+						[ngClass]="{'is-invalid':slide_name.invalid && slide_name.touched}">
+					<div class="invalid-feedback" *ngIf="slide_name.invalid">Password must be at least 6 characters</div>
+				</div>
+
+				<div class="col-sm-3">
+					<div ngbDropdown class="d-inline-block" [autoClose]="false">
+						<button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Categories</button>
+						<div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+							<button class="dropdown-item"><input type="checkbox" name="category[]" value="1">	Action - 1</button>
+							<button class="dropdown-item"><input type="checkbox" name="category[]" value="2">	Action - 2</button>
+							<button class="dropdown-item"><input type="checkbox" name="category[]" value="3">	Action - 3</button>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 text-right">
+					<input type="hidden" name="id" formControlName="id">
+					<button 
+						type="button" class="btn btn-lg btn-primary" value="{{ saveLabel }}"
+						[disabled]="myForm.invalid || formState!=='init'"
+						(click)="saveForm()"
+						[ngClass]="{
+							'btn-primary': formState!=='error',
+							'btn-danger': formState==='error'
+						}">
+							<fa name="spinner" animation="spin" *ngIf="formState==='saving'" class="mr-2"></fa>
+							<fa name="exclamation-circle" *ngIf="formState==='error'" class="mr-2"></fa>
+							{{ saveLabel }}</button>
+				</div>
+			</div>
+		</form>
+
+
+
+
+
+			
+		<!-- Tab Menu -->
+		<div class="row mt-2">
+			<div class="col-md-3">
+				<!-- Layers -->
+				<div id="tab-layers" *ngIf="!loading && settings.layers" [hidden]="cur_layer!==-1">
+					<h3>Layer Details</h3>
+
+					<app-slide-layers 
+						[layers]="settings.layers"
+						></app-slide-layers>
+				</div>
+
+
+				<!-- Layer Details -->
+				<div id="tab-actions" *ngIf="cur_layer!==-1" [hidden]="cur_keyframe!==-1">
+					<h3>Layer Details</h3>
+
+					<app-slide-details 
+						[layer]="settings.layers[cur_layer]"
+						></app-slide-details>
+				</div>
+
+
+				<!-- Keyframe Props -->
+				<div id="tab-props" *ngIf="cur_keyframe!==-1">		
+					<small><a [routerLink]="" (click)="backToActions()">&laquo; back to actions</a></small>
+					<h3>Action Properties</h3>
+
+					<app-slide-props
+						[props]="settings.layers[cur_layer].keyframes[cur_keyframe]"
+						[cur_layer]="cur_layer"
+						[cur_keyframe]="cur_keyframe"></app-slide-props>
+				</div>
+			</div>
+
+
+
+			<!-- CANVAS -->
+			<div class="col-md-9" *ngIf="!loading && settings.layers">
+				<app-slide-animation
+					#slide_animation
+					[layers]="settings.layers"
+					[is_paused]="timeline_paused"
+					(percent_changed)="timeline_per_update($event)"
+					></app-slide-animation>
+			</div>
+		</div>
+
+		<div *ngIf="!loading && settings.layers">
+			<app-slide-timeline
+				[layers]="settings.layers"
+				[timeline_time]="timeline_time"
+				[cur_keyframe]="cur_keyframe"
+				[cur_layer]="cur_layer"
+				[is_paused]="timeline_paused"
+				[timeline_per]="timeline_per"></app-slide-timeline>
+		</div>
+	</div>
+</div> 

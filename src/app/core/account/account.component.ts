@@ -2,7 +2,8 @@ import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { fadeIn } from './../../animations';
 import { AccountService } from './../../services/core/account.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { ViewChild, Component, OnInit, Input } from '@angular/core';
+import { UcWidgetComponent } from 'ngx-uploadcare-widget';
 
 
 @Component({
@@ -12,6 +13,7 @@ import { Component, OnInit, Input } from '@angular/core';
   animations: [ fadeIn ]
 })
 export class AccountComponent implements OnInit {
+	@ViewChild(UcWidgetComponent) up_care: UcWidgetComponent;
 	area:String = 'overview';
   profile;
 
@@ -72,9 +74,7 @@ export class AccountComponent implements OnInit {
 
 
 
-  changeArea(area){
-		console.log(area);
-		
+  changeArea(area){		
     this.area = area;
 	}
 	
@@ -88,7 +88,9 @@ export class AccountComponent implements OnInit {
 					// Show error message
 					if(res.data.message) this.error_PhotoMsg = res.data.message;		
 				} 
-			} else this.showError();				
+			} else this.showError();
+			this.up_care.clearUploads();
+
 		}, error => {
 			this.error_msg = error;         
 			this.showError();

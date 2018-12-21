@@ -1,0 +1,75 @@
+<div class="row mt-3">
+  <div class="col-md-6">
+    <button class="btn btn-sm" 
+      [class.btn-success]="is_paused" 
+      [class.btn-secondary]="!is_paused"
+      (click)="clickPlayPause()">{{ (is_paused)?'PLAY':'PAUSE' }}</button>
+
+    <button class="btn btn-sm btn-info ml-2"
+      (click)="clickPlayPause()"
+      ngbTooltip="Add Keyframe"><fa name="plus" size="sm" fixed="true"></fa></button>
+
+    <button class="btn btn-sm btn-danger ml-2" 
+      *ngIf="cur_keyframe!==-1"
+      (click)="clickPlayPause()"
+      ngbTooltip="Remove Selected Keyframe"><fa name="trash" size="sm" fixed="true"></fa></button>
+    
+  </div>
+  <div class="col-md-6 text-right">
+    {{ time_percent }} <input type="text" name="total_time" value="{{ total_time }}" [(ngModel)]="total_time" style="width:50px;">
+  </div>
+</div>
+  
+<div class="row mt-3" style="background:#000; color:#fff">
+  <div class="col-md-2">
+    <div style="padding:5px;">Layers</div>
+  </div>
+  <div #timeline_times class="col-md-10" style="background:#000; color:#fff; position: relative;">
+    <div class="timeline_arrow"
+      #timeline_arrow
+      mwlDraggable 
+      (dragging)="draggingTime($event)"
+      (dragStart)="dragStart($event)"
+      (dragEnd)="dragEnd($event)"
+      [dragAxis]="{ x:true, y:false }" 
+      [style.left.px]="time_pos"
+      [style.height.px]="layers_height"></div>
+    <div class="timeline_time" [style.left.%]="0">:00</div>
+    <div class="timeline_time" *ngIf="total_time >= 30" [style.left.%]="((30/total_time)*100) || 0">:30</div>
+    <div class="timeline_time" *ngIf="total_time >= 60" [style.left.%]="((60/total_time)*100) || 0">1:00</div>
+    <div class="timeline_time" *ngIf="total_time >= 90" [style.left.%]="((90/total_time)*100) || 0">1:30</div>
+    <div class="timeline_time" *ngIf="total_time >= 120" [style.left.%]="((120/total_time)*100) || 0">2:00</div>
+    <div class="timeline_time" *ngIf="total_time >= 150" [style.left.%]="((150/total_time)*100) || 0">2:30</div>
+    <div class="timeline_time" *ngIf="total_time >= 180" [style.left.%]="((180/total_time)*100) || 0">3:00</div>
+    <div class="timeline_time" *ngIf="total_time >= 210" [style.left.%]="((210/total_time)*100) || 0">3:30</div>
+    <div class="timeline_time" *ngIf="total_time >= 240" [style.left.%]="((240/total_time)*100) || 0">4:00</div>
+    <div class="timeline_time" *ngIf="total_time >= 270" [style.left.%]="((270/total_time)*100) || 0">4:30</div>
+    <div class="timeline_time" *ngIf="total_time >= 300" [style.left.%]="((300/total_time)*100) || 0">5:00</div>
+  </div>
+</div>
+
+<div class="mb-5 pb-5" #layer_list>
+  <div class="row timeline_row" [class.active]="cur_layer===item_i" *ngFor="let item of layers; index as item_i">
+    <div class="col-md-2 top5">
+      <div class="ml-2">{{ item.layer_name }}</div>
+    </div>
+    <div class="col-md-10 timeline_bar">
+      <div class="timeline_key"
+        *ngFor="let key of item.keyframes; index as i"
+        [style.left.%]="((key.delay/total_time)*100) || 0"
+        (click)="editKey(item_i, i)"
+        [class.active]="cur_keyframe===i && cur_layer===item_i"
+        ngbTooltip="Tooltip on top"></div>
+    </div>
+  </div>
+
+
+  <!-- <div class="row timeline_row active">
+    <div class="col-md-2 top5">
+      <div class="ml-2">Layer Name 3</div>
+    </div>
+    <div class="col-md-10 timeline_bar">
+      <div class="timeline_key" [style.left.%]="((120/total_time)*100) || 0" placement="top" ngbTooltip="Tooltip on top" (click)="editKey(1)"></div>
+    </div>
+  </div> -->
+</div>

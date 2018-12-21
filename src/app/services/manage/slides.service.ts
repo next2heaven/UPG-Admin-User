@@ -1,8 +1,10 @@
+import { ErrorHandlerService } from './../core/error-handler.service';
 import { Api_result } from 'src/app/shared/models/api/api.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { httpOptions } from '../core/common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +18,38 @@ export class SlidesService {
     })
   };
 
-  constructor(private http:HttpClient) { }
+  constructor(
+    private http:HttpClient,
+    private eh:ErrorHandlerService
+    ) { }
 
+
+    
   getSlides(){ 
-    return this.http.get<Api_result>(environment.api_endpoint+'/slides', this.httpOptions).pipe(map(res => {
-      return res;
-    }));
+    return this.http.get<Api_result>(environment.api_endpoint+'/slides', httpOptions)
+      .pipe(map(res => {
+        return res;
+      }));    
+  }
+
+
+    
+  getSlide(id){ 
+    return this.http.get<Api_result>(environment.api_endpoint+'/slides/slide/'+id, httpOptions)
+      .pipe(map(res => {
+        return res;
+      }));    
+  }
+
+
+  saveSlide(data){
+    console.log(JSON.stringify(data));
+    return this.http.post<Api_result>(environment.api_endpoint+'/slides/slide/save', JSON.stringify(data), httpOptions)
+      .pipe(map( res => {
+        console.log('here');
+        return res;
+      }),
+      catchError(this.eh.handleError)
+    );
   }
 }
