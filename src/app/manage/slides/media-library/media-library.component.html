@@ -1,0 +1,41 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">Media Library</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  
+  <div class="modal-body">
+    <!-- LOADING -->
+	  <div class="text-center" *ngIf="loading" @fade>			
+      <img src="/assets/imgs/loading.svg" alt="" style="max-width:200px;">
+    </div>
+
+
+    <div *ngIf="!loading" @fade>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <ngx-uploadcare-widget
+						images-only="true"
+						system-dialog="true"
+						(on-upload-complete)="uploadComplete($event)">
+          </ngx-uploadcare-widget>
+          <div class="alert alert-danger text-center mt-2" *ngIf="error_PhotoMsg > ''">{{ error_PhotoMsg }}</div>
+        </div>
+      </div>
+      <div class="row">
+        <div *ngFor="let file of files;" style="width:100%">
+          <div class="clearfix" ng-if="$index % 4 == 0"></div>
+          <div class="col-md-3">
+            <img src="{{ file.file_url }}/-/resize/180x/" class="img-fluid" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal()">CLOSE</button>
+  </div>
+</div>

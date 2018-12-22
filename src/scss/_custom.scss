@@ -62,13 +62,22 @@ datatable-header{ background:#d1d6d6 }
 .timeline_time:first-child { transform:translateX(0%) }
 .timeline_time:last-child { transform:translateX(-100%) }
 .timeline_row { height:30px; }
-.timeline_bar { background:url(/assets/imgs/bar_h.png) repeat-x center center; height:30px; border-left:1px solid #999; border-right:1px solid #999; }
+.timeline_row a { color:#666; }
+.timeline_bar { background:url(/assets/imgs/bar_h.png) repeat-x center center; height:30px; border-left:1px solid #999; 
+									border-right:1px solid #999; position: relative; }
 .timeline_key { position: absolute; top:10px; background: #666; width:11px; height:11px; border-radius: 50%; transform: translateX(-50%);
 									cursor:pointer; z-index:200; }
 .timeline_key:hover { top:8px; width:15px; height:15px; }
-.timeline_row.active { color:$primary }
 .timeline_key.active { background:$primary; top:7px; width:17px; height:17px; }
+.timeline_key_tail { position: absolute; top:50%; height:10px; border-left:1px solid #666; transform:translateY(-4px); z-index:180; }
+.timeline_key_tail:after { content: ' '; display: block; width: 100%; height: 3px; background: #666; position: absolute; top: 50%; margin-top: -2px; }
+.timeline_key_tail.active:after { background:$primary; }
+.timeline_key_tail.active { border-left:1px solid $primary; }
+.timeline_row.active { color:$primary }
 .timeline_row:nth-child(even) { background:rgba(200,200,200,.2) }
 .timeline_row:hover { background:rgba(200,200,200,.4) }
+.timeline_row.active a { color:$primary; }
 .timeline_arrow { background:url(/assets/imgs/timeline_arrow.png) no-repeat; width:24px; height:13px; position: absolute; top:2px; left:0%; transform: translateX(-50%); cursor: pointer; z-index:50 }
 .timeline_arrow:after { content:""; position: absolute; z-index: -1; top: 14px; bottom: 0; left: 50%; border-left: 2px dotted $primary; transform: translate(-50%); }
+#form_props label { margin-bottom:0 }
+.color-picker-inp { width:20px; height:20px; border:0px; padding:0 0 0 30px; margin:0 }

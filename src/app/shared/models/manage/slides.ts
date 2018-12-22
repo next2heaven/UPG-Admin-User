@@ -10,6 +10,9 @@ export class bgLayer {
 	type: string = '';
 	img_url: string = '';
 	text: string = 'Default Text';
+	anchorX: number = .5;
+	anchorY: number = .5;
+	color:string = '#ffffff';
 	keyframes: LayerKeyProps[] = [];
 }
 
@@ -19,11 +22,11 @@ export class LayerKeyProps {
 	time: number = 0;
 	x: number = 480;
 	y: number = 270;
-	scale_x: number = 1;
-	scale_y: number = 1;
-	pivot_x: number = 50;
-	pivot_y: number = 50;
-	rotation: number = 0;
-	ease_in: string = 'CubicIn';
-	ease_out: string= 'CubicOut';
+	scale: number = 1;
+	scaleX: number = 1;
+	scaleY: number = 1;
+	anchorX: number = .5;
+	anchorY: number = .5;
+	rot: number = 0;
+	ease: string = 'Power3.easeInOut';
 }

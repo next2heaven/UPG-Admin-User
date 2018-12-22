@@ -1,6 +1,6 @@
 <div style="width:1282px; margin:30px auto 0 auto;">
 	<h1>Manage Animated Background</h1>
-
+	
 	<!-- LOADING -->
 	<div class="text-center" *ngIf="loading" @fade>			
 		<img src="/assets/imgs/loading.svg" alt="" style="max-width:200px;">
@@ -92,6 +92,8 @@
 					#slide_animation
 					[layers]="settings.layers"
 					[is_paused]="timeline_paused"
+					[timeline_time]="timeline_time"
+					[tl_max_time]="timeline_total_time"
 					(percent_changed)="timeline_per_update($event)"
 					></app-slide-animation>
 			</div>
@@ -108,3 +110,6 @@
 		</div>
 	</div>
 </div> 
+
+
+

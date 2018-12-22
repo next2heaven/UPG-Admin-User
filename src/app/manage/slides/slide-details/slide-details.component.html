@@ -1,21 +1,59 @@
 <form [formGroup]="myForm">
-	<div class="form-group mt-3">
+	<div class="form-group mt-3" *ngIf="layer.type==='image'">
 		<label for="layer_name" class="col-form-label">Layer Name:</label>
-		<input type="text" class="form-control" autofocus="autofocus" formControlName="layer_name" value=""
-				[ngClass]="{'is-invalid':layer_name.invalid && layer_name.touched}">
+		<input type="text" class="form-control" formControlName="layer_name" value=""
+			[ngClass]="{'is-invalid':layer_name.invalid && layer_name.touched}">
 	</div>
 
 	<div class="form-group" [hidden]="layer.type!=='image'">
-		<label for="layer_name" class="col-form-label">Image:</label>
-		<input type="text" class="form-control" autofocus="autofocus" formControlName="img_url" value=""
-			[ngClass]="{'is-invalid':img_url.invalid && img_url.touched}">
+		<input type="hidden" formControlName="img_url">
+		<button 
+			class="btn btn-info" 
+			(click)="openMediaLibrary()">CHOOSE MEDIA</button>
 	</div>
 
-	<div class="form-group" [hidden]="layer.type!=='text'">
-		<label for="layer_name" class="col-form-label">Text:</label>
-		<input type="text" class="form-control" autofocus="autofocus" formControlName="text" value=""
-			[ngClass]="{'is-invalid':text.invalid && text.touched}">
+	<div class="row mt-3">
+		<div class="col-md-11">
+			<div class="form-group" [hidden]="layer.type!=='text'">
+				<label for="layer_name" class="col-form-label">Text:</label>
+				<div class="input-group">					
+					<input type="text" class="form-control" formControlName="text" value=""
+						[ngClass]="{'is-invalid':text.invalid && text.touched}">
+					<div class="input-group-append">
+						<div class="input-group-text" >
+							<input 
+								[(colorPicker)]="color || layer.color" 
+								[style.background]="color || layer.color"
+								[cpOutputFormat]="'hex'"
+								[cpPresetColors]="['#fff', '#000']"
+								[cpAddColorButton]="true"
+								(colorPickerChange)="colorUpdated($event)"
+								[value]="layer.color"
+								class="color-picker-inp"></div>
+						</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-1">
+							
+		</div>
 	</div>
-		
+
+	<div class="row mt-3">
+		<div class="col-md-4">
+			<div class="form-group" class="text-center">
+				<label for="anchorX">Anchor X</label>
+				<input type="number" class="form-control text-center" formControlName="anchorX" value=".5">
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group" class="text-center">
+				<label for="anchorY">Anchor Y</label>
+				<input type="number" class="form-control text-center" formControlName="anchorY" value=".5">
+			</div>
+		</div>
+	</div>
+
+
 	<button class="btn btn-primary mt-2" (click)="clickedDone($event)">DONE</button>
 </form>

@@ -6,21 +6,26 @@
       (click)="clickPlayPause()">{{ (is_paused)?'PLAY':'PAUSE' }}</button>
 
     <button class="btn btn-sm btn-info ml-2"
-      (click)="clickPlayPause()"
+      *ngIf="cur_layer!==-1"
+      (click)="addKey()"
       ngbTooltip="Add Keyframe"><fa name="plus" size="sm" fixed="true"></fa></button>
 
     <button class="btn btn-sm btn-danger ml-2" 
       *ngIf="cur_keyframe!==-1"
-      (click)="clickPlayPause()"
+      (click)="deleteKey()"
       ngbTooltip="Remove Selected Keyframe"><fa name="trash" size="sm" fixed="true"></fa></button>
     
   </div>
   <div class="col-md-6 text-right">
-    {{ time_percent }} <input type="text" name="total_time" value="{{ total_time }}" [(ngModel)]="total_time" style="width:50px;">
+    <input type="text" name="total_time" value="{{ total_time }}" 
+      #tl_total_time
+      [(ngModel)]="total_time"
+      (ngModelChange)="updateTotalTime($event)"
+      style="width:50px;">
   </div>
 </div>
   
-<div class="row mt-3" style="background:#000; color:#fff">
+<div class="row mt-1" style="background:#000; color:#fff">
   <div class="col-md-2">
     <div style="padding:5px;">Layers</div>
   </div>
@@ -51,18 +56,25 @@
 <div class="mb-5 pb-5" #layer_list>
   <div class="row timeline_row" [class.active]="cur_layer===item_i" *ngFor="let item of layers; index as item_i">
     <div class="col-md-2 top5">
-      <div class="ml-2">{{ item.layer_name }}</div>
+      <div class="ml-2">
+        <a (click)="updateCurLayer(item_i)" [routerLink]="">{{ item.layer_name }}</a>
+      </div>
     </div>
     <div class="col-md-10 timeline_bar">
-      <div class="timeline_key"
-        *ngFor="let key of item.keyframes; index as i"
-        [style.left.%]="((key.delay/total_time)*100) || 0"
-        (click)="editKey(item_i, i)"
-        [class.active]="cur_keyframe===i && cur_layer===item_i"
-        ngbTooltip="Tooltip on top"></div>
+      <div *ngFor="let key of item.keyframes; index as i">
+        <div class="timeline_key"
+          [style.left.%]="((key.delay/total_time)*100) || 0"
+          (click)="editKey(item_i, i)"
+          [class.active]="cur_keyframe===i && cur_layer===item_i"
+          ngbTooltip="Tooltip on top">
+        </div>
+        <div class="timeline_key_tail"
+          [class.active]="cur_keyframe===i && cur_layer===item_i"
+          [style.left.px]="((timeline_width_px * (key.delay/total_time)) - (timeline_width_px * (key.time/total_time))) || 0"
+          [style.width.px]="(timeline_width_px * (key.time/total_time)) || 0"></div>
+      </div>
     </div>
   </div>
-
 
   <!-- <div class="row timeline_row active">
     <div class="col-md-2 top5">

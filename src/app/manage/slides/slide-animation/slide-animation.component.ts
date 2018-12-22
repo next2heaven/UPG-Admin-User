@@ -1,11 +1,10 @@
-import { SlideComponent } from './../slide/slide.component';
 import { bgLayer } from './../../../shared/models/manage/slides';
 import { Component, OnInit, ViewChild, ElementRef, Input, OnChanges, SimpleChanges, Output } from '@angular/core';
-import { TimelineMax, Power1, Bounce } from 'gsap/all';
-import { Sprite, Application, Rectangle, Texture, Container, DisplayObject, Text } from 'pixi.js';
+import { TimelineMax } from 'gsap/all';
+import { Sprite, Text } from 'pixi.js';
 import { EventEmitter } from '@angular/core';
 
-//declare var TweenMax: any;
+declare var TweenMax: any;
 declare var PIXI: any; 
 
 @Component({
@@ -17,10 +16,13 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 	@ViewChild('pixi_container') pixi_container: ElementRef;
 	@Input() layers:bgLayer[];
 	@Input() is_paused:boolean = true;
+	@Input() timeline_time:number = 0;
 	@Output() percent_changed = new EventEmitter();
+	@Input() tl_max_time:number = 120;
 	pApp: any; 
 	main_tl:TimelineMax;
 	per:number;
+	tl_max_time_ref:any;
 
 	constructor() { }
 
@@ -33,9 +35,7 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 			paused:this.is_paused,
 			onUpdate:this.timelineUpdated
 		});
-		let tl = new TimelineMax();
-		this.main_tl.add(tl, 0);
-		tl.addCallback(()=>{}, 300);	// total time of timeline
+		this.updateTimelineTotalTime();
 
 		// Setup Assets
 		this.layers.forEach(layer => {
@@ -46,7 +46,9 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 	ngOnChanges(changes:SimpleChanges):void {
 		if(changes.is_paused && this.main_tl){
 			if(this.is_paused) this.main_tl.pause();
-			else this.main_tl.play();
+			else this.main_tl.play();	
+		} else if(changes.tl_max_time){
+			this.updateTimelineTotalTime();
 		}
 	}
 
@@ -55,27 +57,49 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 		this.percent_changed.emit(this.main_tl.progress());
 	}
 
+	private updateTimelineTotalTime():void{
+		if(this.tl_max_time_ref) this.tl_max_time_ref.remove();
+		if(this.main_tl){
+			let tl = new TimelineMax();
+			this.main_tl.add(tl, 0);
+			tl.addCallback(()=>{}, this.tl_max_time);	// total time of timeline
+			this.tl_max_time_ref = tl;
+		}
+	}
 
 
+	// DRAWIMAGE
 	public drawImage(layer):any {
 		let sprite: Sprite = PIXI.Sprite.fromImage('/assets/imgs/temp_rock.png');
 		sprite.x = 50;
 		sprite.y = 50;
 		this.pApp.stage.addChild(sprite);
+
+		// Pivot
+		sprite.anchor.set(layer.anchorX, layer.anchorY);
+
 		return sprite;
 	}
 
+
+	// DRAW TEXT
 	public drawText(layer):any {
-		let text = new PIXI.Text(layer.text, this.updateProps(layer));
+		let text = new PIXI.Text(layer.text, this.updateTextProps(layer));
 		this.pApp.stage.addChild(text);
+
+		// Pivot
+		text.anchor.set(layer.anchorX, layer.anchorY);
+
 		return text;
 	}
 
-	public updateProps(layer){
+
+
+	public updateTextProps(layer){
 		let prop:any = {};
 		prop.fontFamily = 'Arial';
 		prop.fontSize = 24;
-		prop.fill = 0xff1010;
+		prop.fill = layer.color;
 		prop.align = 'center';
 		return prop;
 	}
@@ -99,14 +123,28 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 		
 		// Add keyframe animations
 		layer.keyframes.forEach(key => {
-			//tl.fromTo(layer.ref, 2, {x: 20}, {x: 440, ease: Power1.easeOut}, 0);
-			//tl.fromTo(layer.ref, 2, {y: 20}, {y: 440, ease: Bounce.easeOut}, 0);
-			tl.to(layer.ref, key.time, key, 0);
+			let props = {
+				x: key.x,
+				y: key.y,
+				delay: key.delay - key.time,
+				ease: eval(key.ease.replace('_', '.')),
+				rotation: (key.rot * (Math.PI / 180))	// have to convert to radians
+			}
 
-			//ease: eval("Elastic.easeOut.config(1.5, 0.5)")
+			// Normal Properties
+			tl.to(layer.ref, key.time, props, 0);
+
+			// Scale
+			//tl.to(layer.ref.scale, key.time, { x:2, y:2 }, 0);
+			tl.to(layer.ref, key.time, { pixi: { scale: 3 }}, (key.delay - key.time));
+			
 		});
-		
+		tl.seek(this.timeline_time);		
 	}
+
+
+
+
 
 
 

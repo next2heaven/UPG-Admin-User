@@ -18,6 +18,7 @@ import { ForgotComponent } from './auth/forgot/forgot.component';
 import { NewpassComponent } from './auth/newpass/newpass.component';
 import { HeaderComponent } from './core/header/header.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
@@ -36,6 +37,7 @@ import { SlideLayersComponent } from './manage/slides/slide-layers/slide-layers.
 import { SlideTimelineComponent } from './manage/slides/slide-timeline/slide-timeline.component';
 import { DragAndDropModule } from 'angular-draggable-droppable';
 import { SlideAnimationComponent } from './manage/slides/slide-animation/slide-animation.component';
+import { MediaLibraryComponent } from './manage/slides/media-library/media-library.component';
 
 
 @NgModule({
@@ -58,7 +60,8 @@ import { SlideAnimationComponent } from './manage/slides/slide-animation/slide-a
     SlideDetailsComponent,
     SlideLayersComponent,
     SlideTimelineComponent,
-    SlideAnimationComponent
+    SlideAnimationComponent,
+    MediaLibraryComponent
   ],
   imports: [
     HttpClientModule,
@@ -71,12 +74,14 @@ import { SlideAnimationComponent } from './manage/slides/slide-animation/slide-a
     NgbModule,
     NgxDatatableModule,
     UcWidgetModule,
-    DragAndDropModule
+    DragAndDropModule,
+    ColorPickerModule
   ],
   providers: [
 		AuthGuard,
 		ErrorHandlerService
   ],
+  entryComponents: [MediaLibraryComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

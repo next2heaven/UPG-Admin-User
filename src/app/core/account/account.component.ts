@@ -79,7 +79,7 @@ export class AccountComponent implements OnInit {
 	}
 	
 
-	uploadComplete(e){
+	uploadComplete(e):void {
 		let url = e.cdnUrl+'-/scale_crop/175x175/';
 		this.profile.avatar_url = url;
 		this.accountServ.saveProfilePhoto(url).subscribe( res => {

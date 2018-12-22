@@ -1,6 +1,6 @@
 import { SlideAnimationComponent } from './../slide-animation/slide-animation.component';
 import { fadeIn } from './../../../animations';
-import { AniBackground, bgLayer } from './../../../shared/models/manage/slides';
+import { AniBackground, bgLayer, LayerKeyProps } from './../../../shared/models/manage/slides';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 import { SlidesService } from './../../../services/manage/slides.service';
@@ -22,6 +22,7 @@ export class SlideComponent implements OnInit {
 	timeline_time:number = 0;
 	timeline_paused:boolean = true;
 	timeline_per:number = 0;
+	timeline_total_time:number = 120;
 
 	myForm:FormGroup;
 	error_msg:string;
@@ -72,8 +73,12 @@ export class SlideComponent implements OnInit {
 
 
 	backToLayers():void {
-		this.slide_animation.animateLayer(this.settings.layers[this.cur_layer]);
+		this.updateAniLayer();
 		this.cur_layer = -1;
+	}
+
+	updateAniLayer():void {
+		this.slide_animation.animateLayer(this.settings.layers[this.cur_layer]);
 	}
 
 	updateKeyframe(layer_id, key_id):void {
@@ -90,9 +95,14 @@ export class SlideComponent implements OnInit {
 		this.timeline_time = sec;
 	}
 
-	updateTimePlayhead(sec):void {
+	updateTimePlayhead(sec, per):void {
 		this.timeline_time = sec;
+		this.timeline_per = per;
 		if(this.slide_animation) this.slide_animation.updateTimelinePos(this.timeline_time);
+	}
+
+	updateTotalTime(v):void {
+		this.timeline_total_time = v;
 	}
 
 	timeline_per_update(per):void {
@@ -101,6 +111,17 @@ export class SlideComponent implements OnInit {
 
 	addedLayer(layer):void {
 		this.slide_animation.animateLayer(layer);
+	}
+
+	addKey(pos):void {
+		let key = new LayerKeyProps();
+		key.delay = pos;
+		this.settings.layers[this.cur_layer].keyframes.unshift(key);
+		this.cur_keyframe = 0;
+	}
+
+	deleteKey(pos):void {
+		console.log(pos);
 	}
 
 
