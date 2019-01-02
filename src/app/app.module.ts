@@ -38,6 +38,7 @@ import { SlideTimelineComponent } from './manage/slides/slide-timeline/slide-tim
 import { DragAndDropModule } from 'angular-draggable-droppable';
 import { SlideAnimationComponent } from './manage/slides/slide-animation/slide-animation.component';
 import { MediaLibraryComponent } from './manage/slides/media-library/media-library.component';
+import { SortablejsModule } from 'angular-sortablejs';
 
 
 @NgModule({
@@ -75,7 +76,8 @@ import { MediaLibraryComponent } from './manage/slides/media-library/media-libra
     NgxDatatableModule,
     UcWidgetModule,
     DragAndDropModule,
-    ColorPickerModule
+    ColorPickerModule,
+    SortablejsModule
   ],
   providers: [
 		AuthGuard,

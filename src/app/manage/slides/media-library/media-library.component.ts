@@ -13,7 +13,7 @@ import { UcWidgetComponent } from 'ngx-uploadcare-widget';
 export class MediaLibraryComponent implements OnInit {
 	@ViewChild(UcWidgetComponent) up_care: UcWidgetComponent;
   loading:boolean = true;
-  files:object;
+  files:any;
   error_PhotoMsg:string;
 
   constructor(
@@ -27,9 +27,7 @@ export class MediaLibraryComponent implements OnInit {
         this.files = res.data.media;
       }
 
-
-			this.loading = false;
-			
+			this.loading = false;			
 		});
   }
 
@@ -44,20 +42,28 @@ export class MediaLibraryComponent implements OnInit {
     }).subscribe( res => {
 			if(res!==null){
 				if(!res.hasOwnProperty('status') || res.status!='success'){
+
 					// Show error message
-					if(res.data.message) this.error_PhotoMsg = res.data.message;		
-				} 
+					if(res.data.message) this.error_PhotoMsg = res.data.message;
+				} else {
+          this.files.unshift({file_url:url});
+        }
 			} 
-			this.up_care.clearUploads();
+			//this.up_care.clearUploads();        <----- whats the deal with this creating an error?
 
 		}, error => {
 			this.error_PhotoMsg = error;
 		}); 
-	}
+  }
+  
+
+  useMediaFile(file_url):void {
+    this.activeModal.close(file_url);
+  }
 
 
   closeModal() {     
-    this.activeModal.close('image here');
+    this.activeModal.close('');
   }
 
 }

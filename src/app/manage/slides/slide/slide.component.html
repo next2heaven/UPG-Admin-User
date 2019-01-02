@@ -54,8 +54,6 @@
 			<div class="col-md-3">
 				<!-- Layers -->
 				<div id="tab-layers" *ngIf="!loading && settings.layers" [hidden]="cur_layer!==-1">
-					<h3>Layer Details</h3>
-
 					<app-slide-layers 
 						[layers]="settings.layers"
 						></app-slide-layers>
@@ -64,8 +62,6 @@
 
 				<!-- Layer Details -->
 				<div id="tab-actions" *ngIf="cur_layer!==-1" [hidden]="cur_keyframe!==-1">
-					<h3>Layer Details</h3>
-
 					<app-slide-details 
 						[layer]="settings.layers[cur_layer]"
 						></app-slide-details>
@@ -73,10 +69,7 @@
 
 
 				<!-- Keyframe Props -->
-				<div id="tab-props" *ngIf="cur_keyframe!==-1">		
-					<small><a [routerLink]="" (click)="backToActions()">&laquo; back to actions</a></small>
-					<h3>Action Properties</h3>
-
+				<div id="tab-props" *ngIf="cur_keyframe!==-1">
 					<app-slide-props
 						[props]="settings.layers[cur_layer].keyframes[cur_keyframe]"
 						[cur_layer]="cur_layer"

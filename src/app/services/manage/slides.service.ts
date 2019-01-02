@@ -44,9 +44,9 @@ export class SlidesService {
 
   saveSlide(data){
     console.log(JSON.stringify(data));
+    console.log(data);
     return this.http.post<Api_result>(environment.api_endpoint+'/slides/slide/save', JSON.stringify(data), httpOptions)
       .pipe(map( res => {
-        console.log('here');
         return res;
       }),
       catchError(this.eh.handleError)

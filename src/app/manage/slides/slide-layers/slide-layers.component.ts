@@ -9,10 +9,19 @@ import { Component, OnInit, Input, Output } from '@angular/core';
 })
 export class SlideLayersComponent implements OnInit {
   @Input() layers:bgLayer[];
+  dnd_options:any;
+  
 
   constructor(
     private slideComp:SlideComponent
-  ) { }
+    ) { 
+    this.dnd_options = {
+      animation: 250,
+      onUpdate: (event: any) => {
+        this.slideComp.redrawAnimation();
+      }
+    };
+  }
 
   ngOnInit() {
   }

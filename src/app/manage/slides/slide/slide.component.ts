@@ -121,9 +121,12 @@ export class SlideComponent implements OnInit {
 	}
 
 	deleteKey(pos):void {
-		console.log(pos);
+		this.settings.layers[this.cur_layer].keyframes.splice(this.cur_keyframe,1);
 	}
 
+	redrawAnimation():void {
+		this.slide_animation.redrawAll();
+	}
 
 
 

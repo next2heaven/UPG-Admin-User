@@ -34,7 +34,9 @@ export class SlideDetailsComponent implements OnInit {
 				Validators.minLength(2)
 			]],
 			anchorX:[this.layer.anchorX],
-			anchorY:[this.layer.anchorY]
+			anchorY:[this.layer.anchorY],
+			font:[this.layer.font],
+			font_size:[this.layer.font_size]
 		});
 
 		
@@ -82,6 +84,8 @@ export class SlideDetailsComponent implements OnInit {
 		this.slideComp.settings.layers[this.slideComp.cur_layer].text = val.text;
 		this.slideComp.settings.layers[this.slideComp.cur_layer].anchorX = val.anchorX;
 		this.slideComp.settings.layers[this.slideComp.cur_layer].anchorY = val.anchorY;
+		this.slideComp.settings.layers[this.slideComp.cur_layer].font = val.font;
+		this.slideComp.settings.layers[this.slideComp.cur_layer].font_size = val.font_size;
 		this.slideComp.updateAniLayer();
 		
 	}

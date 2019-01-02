@@ -1,3 +1,6 @@
+
+<h3><fa name="chevron-circle-left" size="md" fixed="true" (click)="clickedDone($event)"></fa>Layer Details</h3>
+
 <form [formGroup]="myForm">
 	<div class="form-group mt-3" *ngIf="layer.type==='image'">
 		<label for="layer_name" class="col-form-label">Layer Name:</label>
@@ -54,6 +57,21 @@
 		</div>
 	</div>
 
-
-	<button class="btn btn-primary mt-2" (click)="clickedDone($event)">DONE</button>
+	<div class="row mt-3" [hidden]="layer.type!=='text'">
+		<div class="col-md-8">
+			<div class="form-group" class="text-center">
+				<label for="font">Font</label>
+				<select class="form-control" formControlName="font">
+					<option value="Arial">Arial</option>
+					<!-- <option *ngFor="let ease of easeList | keyvalue" value="{{ ease.key }}">{{ ease.value }}</option> -->
+				</select>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<label for="font_size">Font Size</label>
+				<input type="number" class="form-control text-center" formControlName="font_size" value=".5">
+			</div>
+		</div>
+	</div>
 </form>

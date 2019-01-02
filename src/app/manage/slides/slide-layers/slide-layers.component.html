@@ -1,3 +1,5 @@
+<h3>Layers</h3>
+
 <!-- Add Layer -->
 <div class="text-center">
   <div ngbDropdown class="d-inline-block mt-3">
@@ -11,7 +13,10 @@
 </div>
  
 <!-- Layers -->
-<ul class="list-group pt-2" *ngIf="layers">
+<ul class="list-group pt-2" 
+  *ngIf="layers"
+  [sortablejs]="layers"
+  [sortablejsOptions]="dnd_options">
   <li class="list-group-item"
     *ngFor="let layer of layers; index as i" 
     (click)="editLayer(i)"

@@ -13,6 +13,8 @@ export class bgLayer {
 	anchorX: number = .5;
 	anchorY: number = .5;
 	color:string = '#ffffff';
+	font:string = 'Arial';
+	font_size:number = 14;
 	keyframes: LayerKeyProps[] = [];
 }
 

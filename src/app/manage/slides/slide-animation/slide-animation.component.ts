@@ -1,7 +1,7 @@
 import { bgLayer } from './../../../shared/models/manage/slides';
 import { Component, OnInit, ViewChild, ElementRef, Input, OnChanges, SimpleChanges, Output } from '@angular/core';
 import { TimelineMax } from 'gsap/all';
-import { Sprite, Text } from 'pixi.js';
+import { Sprite, Text, Point } from 'pixi.js';
 import { EventEmitter } from '@angular/core';
 
 declare var TweenMax: any;
@@ -37,10 +37,7 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 		});
 		this.updateTimelineTotalTime();
 
-		// Setup Assets
-		this.layers.forEach(layer => {
-			this.animateLayer(layer);
-		});		
+		this.redrawAll();	
 	}
 
 	ngOnChanges(changes:SimpleChanges):void {
@@ -68,22 +65,32 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 	}
 
 
+
+	redrawAll():void {
+		this.layers.forEach(layer => {
+			this.animateLayer(layer);
+		});
+	}
+
+
 	// DRAWIMAGE
-	public drawImage(layer):any {
-		let sprite: Sprite = PIXI.Sprite.fromImage('/assets/imgs/temp_rock.png');
+	drawImage(layer):any {
+		let sprite: Sprite = PIXI.Sprite.fromImage(layer.img_url);
 		sprite.x = 50;
 		sprite.y = 50;
-		this.pApp.stage.addChild(sprite);
+		sprite.scale.set(.5, .5);
 
 		// Pivot
 		sprite.anchor.set(layer.anchorX, layer.anchorY);
+
+		this.pApp.stage.addChild(sprite);
 
 		return sprite;
 	}
 
 
 	// DRAW TEXT
-	public drawText(layer):any {
+	drawText(layer):any {
 		let text = new PIXI.Text(layer.text, this.updateTextProps(layer));
 		this.pApp.stage.addChild(text);
 
@@ -95,10 +102,10 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 
 
 
-	public updateTextProps(layer){
+	updateTextProps(layer){
 		let prop:any = {};
-		prop.fontFamily = 'Arial';
-		prop.fontSize = 24;
+		prop.fontFamily = layer.font;
+		prop.fontSize = layer.font_size;
 		prop.fill = layer.color;
 		prop.align = 'center';
 		return prop;
@@ -106,10 +113,10 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 
 
 	
-	public animateLayer(layer):void {
+	animateLayer(layer):void {
 		// remove timeline object from main timeline
-		if(layer.tl_ref) this.main_tl.remove(layer.tl_ref);
 		if(layer.ref) this.pApp.stage.removeChild(layer.ref);
+		if(layer.tl_ref) this.main_tl.remove(layer.tl_ref);
 
 
 		if(layer.type=="image") layer.ref = this.drawImage(layer);
@@ -136,7 +143,8 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 
 			// Scale
 			//tl.to(layer.ref.scale, key.time, { x:2, y:2 }, 0);
-			tl.to(layer.ref, key.time, { pixi: { scale: 3 }}, (key.delay - key.time));
+			let newScale = ((key.scale - 1) / 2)+1;
+			tl.to(layer.ref, key.time, { pixi: { scale: newScale }}, (key.delay - key.time));
 			
 		});
 		tl.seek(this.timeline_time);		

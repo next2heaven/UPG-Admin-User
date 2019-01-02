@@ -25,11 +25,8 @@
         </div>
       </div>
       <div class="row">
-        <div *ngFor="let file of files;" style="width:100%">
-          <div class="clearfix" ng-if="$index % 4 == 0"></div>
-          <div class="col-md-3">
-            <img src="{{ file.file_url }}/-/resize/180x/" class="img-fluid" alt="">
-          </div>
+        <div class="col-md-2 mb-3" *ngFor="let file of files; let i = index">
+          <img src="{{ file.file_url }}-/resize/160x/" class="img-fluid" alt="" (click)="useMediaFile(file.file_url)">
         </div>
       </div>
     </div>
