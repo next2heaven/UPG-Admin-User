@@ -1,10 +1,11 @@
+import { ActivatedRoute } from '@angular/router';
 import { SlideAnimationComponent } from './../slide-animation/slide-animation.component';
 import { fadeIn } from './../../../animations';
 import { AniBackground, bgLayer, LayerKeyProps } from './../../../shared/models/manage/slides';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 import { SlidesService } from './../../../services/manage/slides.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 
 
 @Component({
@@ -33,7 +34,8 @@ export class SlideComponent implements OnInit {
 
 	constructor(
 		private fb:FormBuilder,
-		private slideServ:SlidesService
+		private slideServ:SlidesService,
+		private activatedRoute:ActivatedRoute
 	) { }
 
 	ngOnInit() {
@@ -42,21 +44,37 @@ export class SlideComponent implements OnInit {
 			slide_name:['', [
 				Validators.required,
 				Validators.minLength(6)
-			]]
+			]],
+			slide_type: new FormControl(null),
+			categories: new FormControl(null)
 		});
 
-		this.slideServ.getSlide(1).subscribe(res => {
-			let slide_data = res.data.slide;
-			let slide_settings = JSON.parse(slide_data.settings);
-			this.myForm.setValue({
-				'id': slide_data.id,
-				'slide_name': slide_data.slide_name
+		this.activatedRoute.params.subscribe(paramsId => {
+
+			this.slideServ.getSlide( paramsId.id ).subscribe(res => {
+				let slide_data = res.data.slide;
+				let slide_settings = JSON.parse(slide_data.settings);
+
+				// check if empty
+				if(Object.keys(slide_settings).length === 0 && slide_settings.constructor === Object){
+					slide_settings = new AniBackground();
+				}
+				
+
+				this.myForm.setValue({
+					'id': slide_data.id,
+					'slide_name': slide_data.slide_name,
+					'slide_type': slide_data.slide_type.split(','),
+					'categories': slide_data.categories.split(',')
+				});
+				this.settings = slide_settings;
+	
+				this.loading = false;
 			});
-			this.settings = slide_settings;			
 
-			this.loading = false;
-			
 		});
+
+		
 	}
 
 
@@ -75,6 +93,12 @@ export class SlideComponent implements OnInit {
 	backToLayers():void {
 		this.updateAniLayer();
 		this.cur_layer = -1;
+	}
+
+	removeLayer():void {
+		let last_layer:number = this.cur_layer;
+		this.cur_layer = -1;
+		this.settings.layers.splice(last_layer,1);
 	}
 
 	updateAniLayer():void {
@@ -134,6 +158,7 @@ export class SlideComponent implements OnInit {
 
 
 	saveForm(){
+
 		let save_settings:AniBackground = this.settings;
 		save_settings.layers.forEach(layer => {
 			layer.ref = null;
@@ -145,6 +170,8 @@ export class SlideComponent implements OnInit {
 			this.slideServ.saveSlide({
 				id: this.myForm.get('id').value,
 				slide_name: this.myForm.get('slide_name').value,
+				slide_type: this.myForm.get('slide_type').value.toString(),
+				categories: this.myForm.get('categories').value.toString(),
 				settings: save_settings,
 				live: 1
 			}).subscribe( res => {

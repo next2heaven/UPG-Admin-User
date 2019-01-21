@@ -1,3 +1,5 @@
+import { CheckboxGroupComponent } from './shared/components/checkbox-group.component';
+import { CheckboxComponent } from './shared/components/checkbox.component';
 import { DraggableScrollContainerDirective } from 'angular-draggable-droppable/lib/draggable-scroll-container.directive';
 import { DraggableDirective } from 'angular-draggable-droppable/lib/draggable.directive';
 import { ErrorHandlerService } from './services/core/error-handler.service';
@@ -21,7 +23,6 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ColorPickerModule } from 'ngx-color-picker';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { MemberComponent } from './core/member/member.component';
 import { ManageComponent } from './manage/manage/manage.component';
 import { DashboardComponent } from './core/dashboard/dashboard.component';
@@ -39,7 +40,14 @@ import { DragAndDropModule } from 'angular-draggable-droppable';
 import { SlideAnimationComponent } from './manage/slides/slide-animation/slide-animation.component';
 import { MediaLibraryComponent } from './manage/slides/media-library/media-library.component';
 import { SortablejsModule } from 'angular-sortablejs';
+import { GamesComponent } from './manage/games/games/games.component';
+import { GameComponent } from './manage/games/game/game.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
 
+library.add(fas, far);
 
 @NgModule({
   declarations: [
@@ -62,14 +70,17 @@ import { SortablejsModule } from 'angular-sortablejs';
     SlideLayersComponent,
     SlideTimelineComponent,
     SlideAnimationComponent,
-    MediaLibraryComponent
+    MediaLibraryComponent,
+    CheckboxComponent,
+    CheckboxGroupComponent,
+    GamesComponent,
+    GameComponent
   ],
   imports: [
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    AngularFontAwesomeModule,
     ReactiveFormsModule,
     FormsModule,
     NgbModule,
@@ -77,7 +88,8 @@ import { SortablejsModule } from 'angular-sortablejs';
     UcWidgetModule,
     DragAndDropModule,
     ColorPickerModule,
-    SortablejsModule
+    SortablejsModule,
+    FontAwesomeModule
   ],
   providers: [
 		AuthGuard,

@@ -1,8 +1,7 @@
-import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { fadeIn } from './../../animations';
 import { AccountService } from './../../services/core/account.service';
-import { ViewChild, Component, OnInit, Input } from '@angular/core';
+import { ViewChild, Component, OnInit } from '@angular/core';
 import { UcWidgetComponent } from 'ngx-uploadcare-widget';
 
 
@@ -28,11 +27,12 @@ export class AccountComponent implements OnInit {
 
   constructor(
     private accountServ:AccountService,
-		private fb:FormBuilder,
-		private route:ActivatedRoute
+		private fb:FormBuilder
     ) { }
 
   ngOnInit() {
+		
+			
     this.accountServ.getAccount().subscribe(res => {
 			this.profile = res.data.user;
 			if(this.profile.avatar_url=='' || this.profile.avatar_url==null) this.profile.avatar_url = '/assets/imgs/default_avatar.png';
@@ -89,7 +89,8 @@ export class AccountComponent implements OnInit {
 					if(res.data.message) this.error_PhotoMsg = res.data.message;		
 				} 
 			} else this.showError();
-			this.up_care.clearUploads();
+			this.up_care.reset(true);
+			
 
 		}, error => {
 			this.error_msg = error;         

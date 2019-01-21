@@ -26,6 +26,7 @@ export class SlideTimelineComponent implements OnInit, OnChanges, OnDestroy, Aft
   layers_height:number = 0;
   time_percent:number = 0;
   timeline_width_px:number = 0;
+  time_left:number = -200;
   changeIntv;
 
 

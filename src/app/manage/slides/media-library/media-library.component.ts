@@ -49,7 +49,7 @@ export class MediaLibraryComponent implements OnInit {
           this.files.unshift({file_url:url});
         }
 			} 
-			//this.up_care.clearUploads();        <----- whats the deal with this creating an error?
+			this.up_care.reset(true);
 
 		}, error => {
 			this.error_PhotoMsg = error;

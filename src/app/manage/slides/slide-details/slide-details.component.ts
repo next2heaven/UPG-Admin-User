@@ -2,8 +2,9 @@ import { MediaLibraryComponent } from './../media-library/media-library.componen
 import { SlideComponent } from './../slide/slide.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { bgLayer } from './../../../shared/models/manage/slides';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UcWidgetComponent } from 'ngx-uploadcare-widget';
 
 @Component({
 	selector: 'app-slide-details',
@@ -11,6 +12,7 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 	styleUrls: ['./slide-details.component.scss']
 })
 export class SlideDetailsComponent implements OnInit {
+	@ViewChild(UcWidgetComponent) up_care: UcWidgetComponent;
 	@Input() layer:bgLayer;
 	myForm:FormGroup;
 
@@ -35,6 +37,8 @@ export class SlideDetailsComponent implements OnInit {
 			]],
 			anchorX:[this.layer.anchorX],
 			anchorY:[this.layer.anchorY],
+			width:[this.layer.width],
+			height:[this.layer.height],
 			font:[this.layer.font],
 			font_size:[this.layer.font_size]
 		});
@@ -84,9 +88,20 @@ export class SlideDetailsComponent implements OnInit {
 		this.slideComp.settings.layers[this.slideComp.cur_layer].text = val.text;
 		this.slideComp.settings.layers[this.slideComp.cur_layer].anchorX = val.anchorX;
 		this.slideComp.settings.layers[this.slideComp.cur_layer].anchorY = val.anchorY;
+		this.slideComp.settings.layers[this.slideComp.cur_layer].width = val.width;
+		this.slideComp.settings.layers[this.slideComp.cur_layer].height = val.height;
 		this.slideComp.settings.layers[this.slideComp.cur_layer].font = val.font;
 		this.slideComp.settings.layers[this.slideComp.cur_layer].font_size = val.font_size;
 		this.slideComp.updateAniLayer();
 		
+	}
+
+	removeLayer(e):void {
+		e.preventDefault();
+		if( confirm('Are you sure you want to remove this layer?') ) this.slideComp.removeLayer();
+	}
+
+	uploadComplete(e):void {
+		this.up_care.reset(true);
 	}
 }

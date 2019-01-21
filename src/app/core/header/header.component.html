@@ -1,28 +1,41 @@
-<nav class="main_nav">
+<nav class="navbar navbar-expand-lg bg-white shadow-sm">
   <div class="container">
-    <ul>
-      <li><a [routerLink]="['/']" class="mr-5">LOGO</a></li>
-      <li><a href="#">PLAY GAME</a></li>
-      <li class="dropdown">
-        <a [routerLink]="" class="dropbtn">CREATE/MANAGE</a>
-        <div class="dropdown-content">
-          <a [routerLink]="['/manage/slides']">[A] Background Slides</a>
-          <a [routerLink]="['/manage/themes']">[A] Themes</a>
-          <a [routerLink]="['/manage/types']">[A] Game Types</a>
-          <a [routerLink]="['/manage/questions']">Question List</a>
-          <a [routerLink]="['/manage/game']">Game</a>
-        </div>
-      </li>
-      <li>
-        <a href="#">COMMUNITY</a>
-      </li>
-      <li>
-        <a href="#">CONTACT</a>
-      </li>
+    <a [routerLink]="['/']" class="mr-5">LOGO</a>
 
-      <li class="pull_right">
-        <a [routerLink]="['/account']"><fa name="user" size="lg"></fa></a> 
-      </li>
-    </ul>
+		<div class="text-right collapse navbar-collapse justify-content-end" id="navbarNav">
+			<ul class="navbar-nav text-nowrap">
+				<!-- <li><a class="nav-link">Dentist Advisors </a></li> -->
+				<li class="nav-item ml-5 active">
+					<a class="nav-link" routerLink="/">PLAY GAME</a>
+				</li>
+				<li class="nav-item ml-5 dropdown" ngbDropdown>
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)" ngbDropdownToggle role="button" aria-haspopup="true" aria-expanded="false">CREATE/MANAGE</a>
+          <div class="dropdown-menu" ngbDropdownMenu>
+            <a class="dropdown-item" [routerLink]="['/manage/slides']">[A] Background Slides</a>
+            <a class="dropdown-item" [routerLink]="['/manage/themes']">[A] Themes</a>
+            <a class="dropdown-item" [routerLink]="['/manage/games']">[A] Games</a>
+            <a class="dropdown-item" [routerLink]="['/manage/questions']">Question List</a>
+            <a class="dropdown-item" [routerLink]="['/manage/cards']">Card Sets</a>
+            <!-- <div role="separator" class="dropdown-divider"></div> -->
+          </div>
+        </li>
+				<li class="nav-item ml-5">
+					<a class="nav-link" routerLink="">COMMUNITY</a>
+				</li>
+
+
+				<li class="nav-item ml-5 dropdown" ngbDropdown>
+					<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)" ngbDropdownToggle role="button" aria-haspopup="true" aria-expanded="false">Account</a>
+					<div class="dropdown-menu" ngbDropdownMenu>
+						<a class="dropdown-item" routerLink="/account">Account Details</a>
+						<!-- <a class="dropdown-item" href="#two">Help</a> -->
+						<a class="dropdown-item" routerLink="/account">Switch Accounts</a>
+						<div role="separator" class="dropdown-divider"></div>
+						<a class="dropdown-item" routerLink="/logout">Log Out</a>
+					</div>
+				</li>
+			</ul>
+
+		</div>
   </div>
 </nav>

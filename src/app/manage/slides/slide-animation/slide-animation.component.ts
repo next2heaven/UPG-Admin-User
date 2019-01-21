@@ -27,7 +27,8 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 	constructor() { }
 
 	ngOnInit() {
-		this.pApp = new PIXI.Application({ width: 960, height: 540 });
+		PIXI.settings.GC_MODES = PIXI.GC_MODES.AUTO;
+		this.pApp = new PIXI.Application({ width: 960, height: 540, antialias: true, transparent: false });
 		this.pixi_container.nativeElement.appendChild(this.pApp.view);
 
 		// ready main timeline
@@ -91,13 +92,27 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 
 	// DRAW TEXT
 	drawText(layer):any {
-		let text = new PIXI.Text(layer.text, this.updateTextProps(layer));
-		this.pApp.stage.addChild(text);
+		var container = new PIXI.Container();
+		this.pApp.stage.addChild(container);
+
+		// draw box
+		var graphics = new PIXI.Graphics();
+		graphics.lineStyle(2, 0xFF0000);
+		var w = layer.width * layer.anchorX;
+		var h = layer.height * layer.anchorY;
+		graphics.drawRect(w*-1, h*-1, layer.width, layer.height);
+		container.addChild(graphics);
+
+		
+		// Add text
+		let text = new PIXI.Text(this.getText(layer.text), this.updateTextProps(layer));
+		container.addChild(text);
 
 		// Pivot
 		text.anchor.set(layer.anchorX, layer.anchorY);
 
-		return text;
+
+		return container;
 	}
 
 
@@ -108,15 +123,24 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 		prop.fontSize = layer.font_size;
 		prop.fill = layer.color;
 		prop.align = 'center';
+		prop.wordWrap = true;
+    prop.wordWrapWidth = layer.width;
 		return prop;
 	}
 
 
+	removeLayer(ref):void {
+		this.pApp.stage.removeChild(ref);
+	}
+	removeTimeline(ref):void {
+		this.main_tl.remove(ref);
+	}
 	
 	animateLayer(layer):void {
 		// remove timeline object from main timeline
-		if(layer.ref) this.pApp.stage.removeChild(layer.ref);
-		if(layer.tl_ref) this.main_tl.remove(layer.tl_ref);
+		if(layer.tl_ref) this.removeLayer(layer.tl_ref);
+		if(layer.ref) this.removeLayer(layer.ref);
+		//myRenderer.textureGC.run();
 
 
 		if(layer.type=="image") layer.ref = this.drawImage(layer);
@@ -135,6 +159,7 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 				y: key.y,
 				delay: key.delay - key.time,
 				ease: eval(key.ease.replace('_', '.')),
+				alpha: key.alpha,
 				rotation: (key.rot * (Math.PI / 180))	// have to convert to radians
 			}
 
@@ -143,8 +168,10 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 
 			// Scale
 			//tl.to(layer.ref.scale, key.time, { x:2, y:2 }, 0);
-			let newScale = ((key.scale - 1) / 2)+1;
-			tl.to(layer.ref, key.time, { pixi: { scale: newScale }}, (key.delay - key.time));
+			let newScaleX = ((key.scaleX - 1) / 2)+1;
+			let newScaleY = ((key.scaleY - 1) / 2)+1;
+			tl.to(layer.ref, key.time, { pixi: { scaleX:newScaleX, scaleY:newScaleY }}, (key.delay - key.time));
+			
 			
 		});
 		tl.seek(this.timeline_time);		
@@ -154,6 +181,15 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 
 
 
+	getText(txt) {
+		txt = txt.replace('{question}', 'This is a question that will go to multiple lines and be pretty long?');
+		txt = txt.replace('{answer1}', 'Sweet');
+		txt = txt.replace('{answer2}', 'Michael Jackson');
+		txt = txt.replace('{answer3}', 'Huckle Berry Finn');
+		txt = txt.replace('{answer4}', 'The University of Utah Gymnastics');
+		txt = txt.replace('{roundNum}', '2');
+		return txt;
+	}
 
 
 

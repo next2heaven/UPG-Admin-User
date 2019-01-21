@@ -8,6 +8,15 @@ export let fade = trigger('fade', [
 	])
 ]);
 
+
+export let fadeBG = trigger('fadeBG', [
+	state('void', style({ opacity:0 })),
+	transition(':enter, :leave', [
+		animate('1s 500ms ease-out')
+	])
+]);
+
+
 export let fadeIn = trigger('fade', [
 	state('void', style({ opacity:0 })),
 	transition(':enter', [

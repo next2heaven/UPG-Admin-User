@@ -81,3 +81,20 @@ datatable-header{ background:#d1d6d6 }
 .timeline_arrow:after { content:""; position: absolute; z-index: -1; top: 14px; bottom: 0; left: 50%; border-left: 2px dotted $primary; transform: translate(-50%); }
 #form_props label { margin-bottom:0 }
 .color-picker-inp { width:20px; height:20px; border:0px; padding:0 0 0 30px; margin:0 }
+.key_ending { background:#a00; }
+.key_trail_ending { border-left-color:#a00; }
+.key_trail_ending:after { background:#a00; }
+
+
+
+/* Game Playlist */
+.block_screen.rad10 { border-radius:10px !important; }
+.pl_block .block_screen { border-radius:10px 10px 0 0; }
+.block_screen { background:#e88900; margin-top:12px; color:#fff; border-bottom:1px solid #af6600; padding:7px 0; }
+.block_list .pl_block:first-child { margin-top:0px; }
+.block_action { background:#007ee5; color:#fff; border-bottom:1px solid #006cc5; padding:7px 0; }
+.block_event { background:#bc00a1; color:#fff; border-bottom:1px solid #850071; padding:7px 0; }
+.block_device { background:#3da500; color:#fff; border-bottom:1px solid #297000; padding:7px 0; }
+.last_block { border-radius:0 0 10px 10px; border-bottom:0 }
+.card .block_screen, .card .block_action, .card .block_event, .card .block_device { border-radius:10px; border-bottom:0; margin-top:6px; cursor: pointer; }
+.sort_area { min-height:1px; }

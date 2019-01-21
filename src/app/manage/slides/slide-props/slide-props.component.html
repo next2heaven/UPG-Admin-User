@@ -34,12 +34,6 @@
   <div class="row mt-2">
     <div class="col-md-3">
       <div class="form-group" class="text-center">
-        <label for="scale">Scale</label>
-        <input type="number" class="form-control text-center" formControlName="scale" value="0">
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="form-group" class="text-center">
         <label for="scaleX">Scale X</label>
         <input type="number" class="form-control text-center" formControlName="scaleX" value="0">
       </div>
@@ -48,6 +42,12 @@
       <div class="form-group" class="text-center">
         <label for="scaleY">Scale Y</label>
         <input type="number" class="form-control text-center" formControlName="scaleY" value="0">
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group" class="text-center">
+        <label for="scaleY">Alpha</label>
+        <input type="number" class="form-control text-center" formControlName="alpha" value="1">
       </div>
     </div>
   </div>
@@ -67,7 +67,17 @@
         </select>
       </div>
     </div>
-  </div>{{ easeList[0] }}
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-md-12">
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="ending" formControlName="ending">
+        <label class="form-check-label" for="ending">Part of Transition Out</label>
+      </div>
+    </div>
+  </div>
+
 <!-- 
   
     <div class="col-md-4">

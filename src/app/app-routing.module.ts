@@ -13,6 +13,8 @@ import { SlidesComponent } from './manage/slides/slides/slides.component';
 import { SlideComponent } from './manage/slides/slide/slide.component';
 import { MemberComponent } from './core/member/member.component';
 import { ResetComponent } from './core/account/reset/reset.component';
+import { GamesComponent } from './manage/games/games/games.component';
+import { GameComponent } from './manage/games/game/game.component';
 
 const routes: Routes = [];
 
@@ -35,6 +37,8 @@ const routes: Routes = [];
             { path: '', redirectTo: '/', pathMatch:'full' },
             { path: 'slides', component: SlidesComponent, canActivate:[AuthGuard] },
             { path: 'slides/slide/:id', component: SlideComponent, canActivate:[AuthGuard] },
+            { path: 'games', component: GamesComponent, canActivate:[AuthGuard] },
+            { path: 'games/game/:id', component: GameComponent, canActivate:[AuthGuard] },
           ]
         }, 
         { path: 'account', component: AccountComponent, canActivate:[AuthGuard],
@@ -45,10 +49,7 @@ const routes: Routes = [];
           ]
         },
       ]
-    },
-   
-
-    //{ path: 'topic/:topicID', component:  }
+    }
   ], { useHash: false })],
   exports: [RouterModule]
 })

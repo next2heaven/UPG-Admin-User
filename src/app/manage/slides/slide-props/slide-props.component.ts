@@ -45,11 +45,12 @@ export class SlidePropsComponent implements OnInit, OnChanges {
       delay:[this.props.delay],
       x:[this.props.x],
       y:[this.props.y],
-      scale:[this.props.scale],
       scaleX:[this.props.scaleX],
       scaleY:[this.props.scaleY],
+      alpha:[this.props.alpha],
       rot:[this.props.rot],
-      ease:[this.props.ease]
+      ease:[this.props.ease],
+      ending:[this.props.ending]
       // anchorX:[this.props.anchorX],
       // anchorY:[this.props.anchorY]
       // transformOrigin:[''],

@@ -1,7 +1,7 @@
 <div class="auth_bg"></div>
 
 <div class="container">
-  <div class="auth_card" @fade>
+  <div class="auth_card">
     <h1 class="text-center">Registration</h1>
 
     <div class="top20">
@@ -10,19 +10,15 @@
       <div *ngIf="show_reg_form">
         <div class="alert alert-danger text-center bot20" *ngIf="error_msg > ''">{{ error_msg }}</div>
         <form [formGroup]="myForm" [hidden]="regSuccess" (ngSubmit)="submitReg()">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <input type="text" placeholder="First Name" formControlName="fname" class="form-control"
-                  [ngClass]="{'is-invalid':fname.invalid && fname.touched}">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <input type="text" placeholder="Last Name" formControlName="lname" class="form-control"
-                  [ngClass]="{'is-invalid':lname.invalid && lname.touched}">
-              </div>
-            </div>
+
+          <div class="form-group">
+            <input type="text" placeholder="First Name" formControlName="fname" class="form-control"
+              [ngClass]="{'is-invalid':fname.invalid && fname.touched}">
+          </div>
+
+          <div class="form-group">
+            <input type="text" placeholder="Last Name" formControlName="lname" class="form-control"
+              [ngClass]="{'is-invalid':lname.invalid && lname.touched}">
           </div>
 
 

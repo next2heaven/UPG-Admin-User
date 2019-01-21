@@ -8,12 +8,12 @@
     <button class="btn btn-sm btn-info ml-2"
       *ngIf="cur_layer!==-1"
       (click)="addKey()"
-      ngbTooltip="Add Keyframe"><fa name="plus" size="sm" fixed="true"></fa></button>
+      ngbTooltip="Add Keyframe"><fa-icon [icon]="['fas', 'plus']" size="sm" [fixedWidth]="true"></fa-icon></button>
 
     <button class="btn btn-sm btn-danger ml-2" 
       *ngIf="cur_keyframe!==-1"
       (click)="deleteKey()"
-      ngbTooltip="Remove Selected Keyframe"><fa name="trash" size="sm" fixed="true"></fa></button>
+      ngbTooltip="Remove Selected Keyframe"><fa-icon [icon]="['fas', 'trash']" size="sm" [fixedWidth]="true"></fa-icon></button>
     
   </div>
   <div class="col-md-6 text-right">
@@ -61,8 +61,9 @@
       </div>
     </div>
     <div class="col-md-10 timeline_bar">
-      <div *ngFor="let key of item.keyframes; index as i">
+      <div *ngFor="let key of item.keyframes; index as i" [style.left.px]="time_left">
         <div class="timeline_key"
+          [class.key_ending]="key.ending"
           [style.left.%]="((key.delay/total_time)*100) || 0"
           (click)="editKey(item_i, i)"
           [class.active]="cur_keyframe===i && cur_layer===item_i"
@@ -70,6 +71,7 @@
         </div>
         <div class="timeline_key_tail"
           [class.active]="cur_keyframe===i && cur_layer===item_i"
+          [class.key_trail_ending]="key.ending"
           [style.left.px]="((timeline_width_px * (key.delay/total_time)) - (timeline_width_px * (key.time/total_time))) || 0"
           [style.width.px]="(timeline_width_px * (key.time/total_time)) || 0"></div>
       </div>

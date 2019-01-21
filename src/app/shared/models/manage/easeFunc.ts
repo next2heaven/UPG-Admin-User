@@ -4,21 +4,9 @@ export class EaseFunc {
 		return {
 			'Power0_easeNone': 'No Ease',
 
-			'Power1_easeIn': 'Power3 In',
-			'Power1_easeOut': 'Power3 Out',
-			'Power1_easeInOut': 'Power3 In/Out',
-
-			'Power2.easeIn': 'Power2 In',
-			'Power2_easeOut': 'Power2 Out',
-			'Power2_easeInOut': 'Power2 In/Out',
-
-			'Power3_easeIn': 'Power3 In',
-			'Power3_easeOut': 'Power3 Out',
-			'Power3_easeInOut': 'Power3 In/Out',
-
-			'Power4_easeIn': 'Power4 In',
-			'Power4easeOut': 'Power4 Out',
-			'Power4_easeInOut': 'Power4 In/Out',
+			'Cubic_easeIn': 'Cubic In',
+			'Cubic_easeOut': 'Cubic Out',
+			'Cubic_easeInOut': 'Cubic In/Out',
 
 			'SteppedEase_easeIn': 'Stepped In',
 			'SteppedEase_easeOut': 'Stepped Out',

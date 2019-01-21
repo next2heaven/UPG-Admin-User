@@ -1,0 +1,149 @@
+<div style="width:1282px; margin:30px auto 0 auto;">
+	<h1>Edit Game</h1>
+	
+	<!-- LOADING -->
+	<div class="text-center" *ngIf="loading" @fade>			
+		<img src="/assets/imgs/loading.svg" alt="" style="max-width:200px;">
+	</div>
+
+
+	<div [hidden]="loading">
+		<form [formGroup]="myForm">
+			<div class="form-group row mt-5">
+				<label for="game_name" class="col-sm-2 col-form-label text-right">Game Name:</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" autofocus="autofocus" formControlName="game_name" value=""
+						[ngClass]="{'is-invalid':game_name.invalid && game_name.touched}">
+					<div class="invalid-feedback" *ngIf="game_name.invalid">Password must be at least 6 characters</div>
+				</div>
+
+			
+			
+				<div class="col-sm-7 text-right">
+					<input type="hidden" name="id" formControlName="id">
+					<input type="hidden" name="playlist" formControlName="playlist">
+					<button 
+						type="button" class="btn btn-lg btn-primary" value="{{ saveLabel }}"
+						[disabled]="myForm.invalid || formState!=='init'"
+						(click)="saveForm()"
+						[ngClass]="{
+							'btn-primary': formState!=='error',
+							'btn-danger': formState==='error'
+						}">
+							<fa-icon [icon]="['fas', 'spinner']" [spin]="true" *ngIf="formState==='saving'" class="mr-2"></fa-icon>
+							<fa-icon [icon]="['fas', 'exclamation-circle']" *ngIf="formState==='error'" class="mr-2"></fa-icon>
+							{{ saveLabel }}</button>
+				</div>
+
+			</div>
+		</form>
+
+
+
+		<div class="row mt-4">
+			<div class="col-md-3 block_list sort_area" [sortablejs]="playlist?.screens" [sortablejsOptions]="options">
+
+				<div class="pl_block"
+					*ngFor="let screen of playlist?.screens">
+
+					<div class="block_screen" [class.rad10]="screen.actions.length === 0">
+						<div class="row text-center">
+							<div class="col-md-2"><fa-icon [icon]="['fas', 'desktop']" size="lg" [fixedWidth]="true"></fa-icon></div>
+							<div class="col-md-8">{{screen.screen_name}}</div>
+						</div>
+					</div>
+
+					<div class="sort_area" [sortablejs]="screen?.actions" [sortablejsOptions]="options2">
+						<div *ngFor="let action of screen?.actions; let last = last">
+							<div 
+								[class.last_block]="last"
+								[class.block_action]="action.type==='action'"
+								[class.block_device]="action.type==='device'"
+								[class.block_event]="action.type==='event'">
+								<div class="row text-center">
+									<div class="col-md-2"><fa-icon [icon]="action.icon" size="lg" [fixedWidth]="true"></fa-icon></div>
+									<div class="col-md-8">{{ action.name }}</div>
+									<div class="col-md-2" *ngIf="action.iconr > ''"><fa-icon [icon]="action.iconr" size="lg" [fixedWidth]="true"></fa-icon></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-md-8 offset-md-1">
+
+				<!-- EDITING ITEM -->
+				<div class="card" *ngIf="editing_screen !editing_event">
+					<div></div>
+				</div>
+
+				<!-- NOT EDITING ITEM -->
+				<div class="card" *ngIf="!editing_item">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-4" >
+								<h5 class="card-title">Screens {{playlist_options.screens?.length}}</h5>
+								<div [sortablejs]="playlist_options?.screens" [sortablejsOptions]="options">
+									<div *ngFor="let item of playlist_options?.screens">
+										<div class="block_screen rad10">
+											<div class="row text-center">
+												<div class="col-md-2 text-right"><fa-icon [icon]="['fas', 'desktop']" size="lg" [fixedWidth]="true"></fa-icon></div>
+												<div class="col-md-8">{{ item.screen_name }}</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="col-md-4">
+								<h5 class="card-title">Actions</h5>
+								<div [sortablejs]="playlist_options?.actions" [sortablejsOptions]="options2">
+									<div *ngFor="let item of playlist_options?.actions">
+										<div class="block_action">
+											<div class="row text-center">
+												<div class="col-md-2 text-right"><fa-icon [icon]="item.icon" size="lg" [fixedWidth]="true"></fa-icon></div>
+												<div class="col-md-8">{{ item.name }}</div>
+												<div class="col-md-2" *ngIf="item.iconr > ''"><fa-icon [icon]="item.iconr" size="lg" [fixedWidth]="true"></fa-icon></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<h5 class="card-title">Device</h5>
+								<div [sortablejs]="playlist_options?.device" [sortablejsOptions]="options2">
+									<div class="block_device" *ngFor="let item of playlist_options?.device">
+										<div class="row text-center">
+											<div class="col-md-2 text-right"><fa-icon [icon]="item.icon" size="lg" [fixedWidth]="true"></fa-icon></div>
+											<div class="col-md-8">{{ item.name }}</div>
+											<div class="col-md-2" *ngIf="item.iconr > ''"><fa-icon [icon]="item.iconr" size="lg" [fixedWidth]="true"></fa-icon></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row mt-5">
+							<div class="col-md-4">
+								<h5 class="card-title">Events</h5>
+								<div [sortablejs]="playlist_options?.events" [sortablejsOptions]="options2">
+									<div class="block_event" *ngFor="let item of playlist_options?.events">
+										<div class="row text-center">
+											<div class="col-md-2 text-right"><fa-icon [icon]="item.icon" size="lg" [fixedWidth]="true"></fa-icon></div>
+											<div class="col-md-8">{{ item.name }}</div>
+											<div class="col-md-2" *ngIf="item.iconr > ''"><fa-icon [icon]="item.iconr" size="lg" [fixedWidth]="true"></fa-icon></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

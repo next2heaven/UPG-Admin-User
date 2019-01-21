@@ -19,6 +19,7 @@
           <ngx-uploadcare-widget
 						images-only="true"
 						system-dialog="true"
+            public-key="ccfa756f426c375c3e98"
 						(on-upload-complete)="uploadComplete($event)">
           </ngx-uploadcare-widget>
           <div class="alert alert-danger text-center mt-2" *ngIf="error_PhotoMsg > ''">{{ error_PhotoMsg }}</div>

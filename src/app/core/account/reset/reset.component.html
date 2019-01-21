@@ -32,8 +32,8 @@
 					'btn-primary': formState!=='error',
 					'btn-danger': formState==='error'
 				}">
-					<fa name="spinner" animation="spin" *ngIf="formState==='saving'" class="mr-2"></fa>
-					<fa name="exclamation-circle" *ngIf="formState==='error'" class="mr-2"></fa>
+					<fa-icon [icon]="spinner" [spin]="true" *ngIf="formState==='saving'" class="mr-2"></fa-icon>
+					<fa-icon [icon]="exclamation-circle" *ngIf="formState==='error'" class="mr-2"></fa-icon>
 					{{ saveLabel }}</button>
 		</div>
 	</div>

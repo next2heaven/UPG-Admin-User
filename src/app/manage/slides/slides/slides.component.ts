@@ -17,7 +17,7 @@ export class SlidesComponent implements OnInit {
 	constructor(private slideServ:SlidesService, private router:Router) { }
 
 	ngOnInit() {
-			this.slideServ.getSlides().subscribe(res => {
+		this.slideServ.getSlides().subscribe(res => {
 			this.rows = res.data.slides;
 			this.columns = [
 				{ name: 'Slide Name', prop:'slide_name' },
@@ -28,6 +28,11 @@ export class SlidesComponent implements OnInit {
 	}
 
 
+	createSlide(){
+		this.slideServ.createSlide().subscribe(res => {
+			this.router.navigate(['/manage/slides/slide/'+res.data.id]);
+		});
+	}
 
 	onActivate(event) {
 		if(event.type=='click') this.router.navigate(['/manage/slides/slide/'+event.row.id]);

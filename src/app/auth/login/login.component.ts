@@ -1,4 +1,4 @@
-import { fade } from './../../animations';
+import { fade, fadeBG } from './../../animations';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/core/auth.service';
@@ -8,7 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 	selector: 'app-login',
 	templateUrl: './login.component.html', 
 	styleUrls: ['./login.component.css'],
-	animations: [ fade ]
+	animations: [ fade, fadeBG ]
 })
 export class LoginComponent implements OnInit {
 	myForm: FormGroup;
@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
 			this.auth.check_user(localStorage.getItem('token')).subscribe(res => {
 				if(res.status == 'success'){
 					let returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-					this.router.navigate([returnUrl || '/member']);
+					this.router.navigate([returnUrl || '/dashboard']);
 					
 				} else {
 					localStorage.setItem('token', '');

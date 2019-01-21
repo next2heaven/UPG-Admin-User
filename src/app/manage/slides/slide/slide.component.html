@@ -18,15 +18,36 @@
 				</div>
 
 				<div class="col-sm-3">
-					<div ngbDropdown class="d-inline-block" [autoClose]="false">
-						<button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Categories</button>
+					<div ngbDropdown class="d-inline-block" [autoClose]="true">
+						<button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Type</button>
 						<div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-							<button class="dropdown-item"><input type="checkbox" name="category[]" value="1">	Action - 1</button>
-							<button class="dropdown-item"><input type="checkbox" name="category[]" value="2">	Action - 2</button>
-							<button class="dropdown-item"><input type="checkbox" name="category[]" value="3">	Action - 3</button>
+							<checkbox-group formControlName="slide_type">
+								<button class="dropdown-item"><checkbox value="round">Round Screen</checkbox></button>
+								<button class="dropdown-item"><checkbox value="background">Background</checkbox></button>
+								<button class="dropdown-item"><checkbox value="mult_overlay">Multiple Choice Overlay</checkbox></button>
+								<button class="dropdown-item"><checkbox value="order_overlay">Order Items Overlay</checkbox></button>
+								<button class="dropdown-item"><checkbox value="tf_overlay">True or False Overlay</checkbox></button>
+							</checkbox-group>
+						</div>
+
+						<div ngbDropdown class="d-inline-block ml-2" [autoClose]="false">
+							<button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Categories</button>
+							<div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+								<checkbox-group formControlName="categories">
+									<button class="dropdown-item"><checkbox value="history">History</checkbox></button>
+									<button class="dropdown-item"><checkbox value="kids">Kids</checkbox></button>
+									<button class="dropdown-item"><checkbox value="Music">Music</checkbox></button>
+									<button class="dropdown-item"><checkbox value="movies">Movies</checkbox></button>
+									<button class="dropdown-item"><checkbox value="tv">TV</checkbox></button>
+									<button class="dropdown-item"><checkbox value="science">Science</checkbox></button>
+									<button class="dropdown-item"><checkbox value="sports">Sports</checkbox></button>
+									<button class="dropdown-item"><checkbox value="video_game">Video Game</checkbox></button>
+								</checkbox-group>
+							</div>
 						</div>
 					</div>
 				</div>
+				
 				<div class="col-sm-3 text-right">
 					<input type="hidden" name="id" formControlName="id">
 					<button 
@@ -37,8 +58,8 @@
 							'btn-primary': formState!=='error',
 							'btn-danger': formState==='error'
 						}">
-							<fa name="spinner" animation="spin" *ngIf="formState==='saving'" class="mr-2"></fa>
-							<fa name="exclamation-circle" *ngIf="formState==='error'" class="mr-2"></fa>
+							<fa-icon [icon]="['fas', 'spinner']" [spin]="true" *ngIf="formState==='saving'" class="mr-2"></fa-icon>
+							<fa-icon [icon]="['fas', 'exclamation-circle']" *ngIf="formState==='error'" class="mr-2"></fa-icon>
 							{{ saveLabel }}</button>
 				</div>
 			</div>

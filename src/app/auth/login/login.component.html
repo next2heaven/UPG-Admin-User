@@ -1,7 +1,7 @@
-<div class="auth_bg" @fade></div>
+<div class="auth_bg"></div>
 
 <div class="container">
-  <div class="auth_card" @fade *ngIf="!screenLoading">
+  <div class="auth_card" *ngIf="!screenLoading">
     <h2 class="text-center">User Login</h2>
     <div class="top20">
       <div class="alert alert-danger text-center bot20" *ngIf="error_msg > ''">{{ error_msg }}</div>
@@ -27,13 +27,17 @@
             </div>
           </div>
           <div class="col-md-4">
-            <div class="btn-group float-right">
-              <button *ngIf="!loading" [disabled]="myForm.invalid" class="btn btn-lrg btn-primary">LOGIN</button>
-              <div *ngIf="loading">loading</div>
+            <div class="btn-group float-right d-flex align-items-center" style="min-height:38px;">
+              <button [disabled]="myForm.invalid || loading" class="btn btn-lrg btn-primary">
+                <fa-icon
+                  [icon]="['fas','spinner']"
+                  [spin]="true"
+                  [fixedWidth]="true"
+                  *ngIf="loading"
+                  ></fa-icon> LOGIN</button>
             </div>
           </div>
         </div>
-        
       </form>
     </div>
 

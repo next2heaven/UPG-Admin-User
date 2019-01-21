@@ -30,7 +30,7 @@ export class ForgotComponent implements OnInit {
 
 	ngOnInit(){
 		this.myForm = this.fb.group({
-			email:['dave@next2heaven.com', [
+			email:['', [
 				Validators.required,
 				Validators.email
 			]]

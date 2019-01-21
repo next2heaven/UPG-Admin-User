@@ -9,7 +9,7 @@ import { httpOptions } from '../core/common.service';
 @Injectable({
   providedIn: 'root'
 })
-export class SlidesService {
+export class GamesService {
   private token = localStorage.getItem('token');
   private httpOptions = {
     headers: new HttpHeaders({
@@ -25,8 +25,8 @@ export class SlidesService {
 
 
     
-  getSlides(){ 
-    return this.http.get<Api_result>(environment.api_endpoint+'/slides', httpOptions)
+  getGames(){ 
+    return this.http.get<Api_result>(environment.api_endpoint+'/games', httpOptions)
       .pipe(map(res => {
         return res;
       }));    
@@ -34,42 +34,24 @@ export class SlidesService {
 
 
     
-  getSlide(id){ 
-    return this.http.get<Api_result>(environment.api_endpoint+'/slides/slide/'+id, httpOptions)
+  getGame(id){ 
+    return this.http.get<Api_result>(environment.api_endpoint+'/games/game/'+id, httpOptions)
       .pipe(map(res => {
         return res;
       }));    
   }
 
-  createSlide(){
-    return this.http.get<Api_result>(environment.api_endpoint+'/slides/create_slide', httpOptions)
+  createGame(){
+    return this.http.get<Api_result>(environment.api_endpoint+'/games/create_game', httpOptions)
       .pipe(map(res => {
         return res;
       }));
   }
 
 
-  saveSlide(data){
+  saveGame(data){
     console.log(JSON.stringify(data));
-    return this.http.post<Api_result>(environment.api_endpoint+'/slides/slide/save', JSON.stringify(data), httpOptions)
-      .pipe(map( res => {
-        return res;
-      }),
-      catchError(this.eh.handleError)
-    );
-  }
-
-
-  getMediaLibrary(){ 
-    return this.http.get<Api_result>(environment.api_endpoint+'/media/get/slides', httpOptions)
-      .pipe(map(res => {
-        return res;
-      }));    
-  }
-
-  saveMedia(data){
-    console.log(JSON.stringify(data));
-    return this.http.post<Api_result>(environment.api_endpoint+'/media/save', JSON.stringify(data), httpOptions)
+    return this.http.post<Api_result>(environment.api_endpoint+'/games/game/save', JSON.stringify(data), httpOptions)
       .pipe(map( res => {
         return res;
       }),
