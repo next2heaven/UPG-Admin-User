@@ -90,11 +90,48 @@ datatable-header{ background:#d1d6d6 }
 /* Game Playlist */
 .block_screen.rad10 { border-radius:10px !important; }
 .pl_block .block_screen { border-radius:10px 10px 0 0; }
-.block_screen { background:#e88900; margin-top:12px; color:#fff; border-bottom:1px solid #af6600; padding:7px 0; }
+.block_screen { background:#e88900; color:#fff; border-bottom:1px solid #af6600; padding:7px 0; margin:12px auto 0 auto; max-width:280px; }
 .block_list .pl_block:first-child { margin-top:0px; }
-.block_action { background:#007ee5; color:#fff; border-bottom:1px solid #006cc5; padding:7px 0; }
-.block_event { background:#bc00a1; color:#fff; border-bottom:1px solid #850071; padding:7px 0; }
-.block_device { background:#3da500; color:#fff; border-bottom:1px solid #297000; padding:7px 0; }
+.block_action { background:#007ee5; color:#fff; border-bottom:1px solid #006cc5; padding:7px 0; margin:0 auto; max-width:280px; }
+.block_event { background:#bc00a1; color:#fff; border-bottom:1px solid #850071; padding:7px 0; margin:0 auto; max-width:280px; }
+.block_device { background:#3da500; color:#fff; border-bottom:1px solid #297000; padding:7px 0; margin:0 auto; max-width:280px; }
 .last_block { border-radius:0 0 10px 10px; border-bottom:0 }
 .card .block_screen, .card .block_action, .card .block_event, .card .block_device { border-radius:10px; border-bottom:0; margin-top:6px; cursor: pointer; }
 .sort_area { min-height:1px; }
+.bg_grey1 { background:#f3f5f3 }
+.repeat1 { background-image:linear-gradient(to bottom, #aaa, rgba(255,255,255,0)); max-width:320px; margin:10px auto 0 auto; }
+.repeat1_end { background-image:linear-gradient(to top, #aaa, rgba(255,255,255,0)); max-width:320px; margin:0 auto;
+								border-radius:0 0 10px 10px; height:30px; }
+.repeat2 { background-image:linear-gradient(to bottom, #aaaaca, rgba(255,255,255,0)); max-width:300px; margin:20px auto 0 auto; }
+.repeat2_end { background-image:linear-gradient(to top, #aaaaca, rgba(255,255,255,0)); max-width:300px; margin:0 auto 5px auto; 
+							border-radius:0 0 10px 10px; height:30px; }
+.repeat_title { color:#000; padding-top:3px; font-size:16px; text-align:center; border-radius:10px 10px 0 0; padding-bottom:5px; }
+
+
+
+
+
+
+
+
+
+
+
+
+// Custom checkbox
+@keyframes check {0% {height: 0;width: 0;}
+	25% {height: 0;width: 10px;}
+	50% {height: 20px;width: 10px;}
+}
+.checkbox{background-color:#fff;display:inline-block;height:28px;margin:3px .25em 0 .25em;width:28px;border-radius:4px;border:1px solid #ccc;}
+.checkbox span{display:block;height:28px;position:relative;width:28px;padding:0}
+.checkbox span:after{-moz-transform:scaleX(-1) rotate(135deg);-ms-transform:scaleX(-1) rotate(135deg);-webkit-transform:scaleX(-1) rotate(135deg);transform:scaleX(-1) rotate(135deg);-moz-transform-origin:left top;-ms-transform-origin:left top;-webkit-transform-origin:left top;transform-origin:left top;border-right:4px solid #fff;border-top:4px solid #fff;content:'';display:block;height:20px;left:3px;position:absolute;top:15px;width:10px}
+.checkbox span:hover:after{border-color:#999}
+.checkbox input{display:none}
+.checkbox input:checked + span:after{-webkit-animation:check .8s;-moz-animation:check .8s;-o-animation:check .8s;animation:check .8s;border-color:#555}
+.checkbox input:checked + .default:after{border-color:#444}
+.checkbox input:checked + .primary:after{border-color:#2196F3}
+.checkbox input:checked + .success:after{border-color:#8bc34a}
+.checkbox input:checked + .info:after{border-color:#3de0f5}
+.checkbox input:checked + .warning:after{border-color:#FFC107}
+.checkbox input:checked + .danger:after{border-color:#f44336}

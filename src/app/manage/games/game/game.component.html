@@ -1,4 +1,4 @@
-<div style="width:1282px; margin:30px auto 0 auto;">
+<div style="width:1282px; margin:30px auto 100px auto;">
 	<h1>Edit Game</h1>
 	
 	<!-- LOADING -->
@@ -40,13 +40,19 @@
 
 
 
+		<!-- PLAYLIST -->
 		<div class="row mt-4">
-			<div class="col-md-3 block_list sort_area" [sortablejs]="playlist?.screens" [sortablejsOptions]="options">
+			<div class="col-md-4 block_list sort_area" [sortablejs]="playlist?.screens" [sortablejsOptions]="options">
 
 				<div class="pl_block"
-					*ngFor="let screen of playlist?.screens">
+					*ngFor="let screen of playlist?.screens; index as i; let last = last">
 
-					<div class="block_screen" [class.rad10]="screen.actions.length === 0">
+					<div class="repeat1 repeat_title" *ngIf="screen.repeat_amount > 1">Repeat {{screen.repeat_amount}} Times</div>
+					<div class="repeat2 repeat_title" *ngIf="screen.special_repeat != 'None'">{{screen.special_repeat}}</div>
+
+					<div class="block_screen" 
+						[class.rad10]="screen.actions.length === 0"
+						(click)="editScreen(i)">
 						<div class="row text-center">
 							<div class="col-md-2"><fa-icon [icon]="['fas', 'desktop']" size="lg" [fixedWidth]="true"></fa-icon></div>
 							<div class="col-md-8">{{screen.screen_name}}</div>
@@ -54,12 +60,13 @@
 					</div>
 
 					<div class="sort_area" [sortablejs]="screen?.actions" [sortablejsOptions]="options2">
-						<div *ngFor="let action of screen?.actions; let last = last">
+						<div *ngFor="let action of screen?.actions; index as ii; let last = last">
 							<div 
 								[class.last_block]="last"
 								[class.block_action]="action.type==='action'"
 								[class.block_device]="action.type==='device'"
-								[class.block_event]="action.type==='event'">
+								[class.block_event]="action.type==='event'"
+								(click)="editAction(ii,i)">
 								<div class="row text-center">
 									<div class="col-md-2"><fa-icon [icon]="action.icon" size="lg" [fixedWidth]="true"></fa-icon></div>
 									<div class="col-md-8">{{ action.name }}</div>
@@ -68,15 +75,170 @@
 							</div>
 						</div>
 					</div>
+
+
+					<div class="repeat2_end" *ngIf="screen.end_prev_spec_repeat"></div>
+					<div class="repeat1_end" *ngIf="screen.end_prev_repeat"></div>
+
 				</div>
 			</div>
 			
-			<div class="col-md-8 offset-md-1">
 
-				<!-- EDITING ITEM -->
-				<div class="card" *ngIf="editing_screen !editing_event">
-					<div></div>
+
+
+			<!-- EDITING AND MODULES -->
+			<div class="col-md-8">
+
+				<!-- EDITING SCREEN ITEM -->
+				<div class="card mb-3" *ngIf="editing_screen>=0 && editing_event<0">
+					<div class="card-body bg_grey1">
+						<h3>{{cur_screen.screen_name}}</h3>
+
+						<!-- Repeat -->
+						<div class="row mt-3">
+							<div class="col-md-2">
+								<div class="form-group">
+									<label for="repeat_amount">Repeat #</label>
+									<input type="number" class="form-control" name="repeat_amount" [(ngModel)]="cur_screen.repeat_amount">
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+									<label for="end_prev_repeat">End Repeat</label>
+									<div style="width:28px;">
+										<label class="checkbox">
+											<input type="checkbox" name="end_prev_repeat" id="end_prev_repeat" [(ngModel)]="cur_screen.end_prev_repeat">
+											<span class="default"></span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="special_repeat">Use Special Repeat</label>
+									<div class="ui-select">
+										<select id="special_repeat" class="form-control" name="special_repeat" [(ngModel)]="cur_screen.special_repeat">
+											<option *ngFor="let item of repeat_list" [value]="item">{{item}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="end_prev_spec_repeat">End Sepcial Repeat</label>
+									<div style="width:28px;">
+										<label class="checkbox">
+											<input type="checkbox" name="end_prev_spec_repeat" id="end_prev_spec_repeat" [(ngModel)]="cur_screen.end_prev_spec_repeat">
+											<span class="default"></span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Repeat -->
+						<div class="row mt-3">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="theme_name">Theme</label>
+									<div class="ui-select">
+										<select id="special_repeat" class="form-control" name="theme_name" [(ngModel)]="cur_screen.theme_name">
+											<option value="">Choose...</option>
+											<option *ngFor="let item of themes" [value]="item.id">{{item.theme_name}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+									<label for="max_players">Max Players</label>
+									<input type="number" class="form-control" name="max_players" [(ngModel)]="cur_screen.max_players">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="start_point_val">Starting Point Value</label>
+									<input type="number" class="form-control" name="start_point_val" [(ngModel)]="cur_screen.start_point_val">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="req_even_teams">Teams Must Be Even</label>
+									<div style="width:28px;">
+										<label class="checkbox">
+											<input type="checkbox" name="req_even_teams" id="req_even_teams" [(ngModel)]="cur_screen.req_even_teams">
+											<span class="default"></span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6"><button class="btn btn-primary" (click)="doneEditing()">Done</button></div>
+							<div class="col-md-6 text-right"><button class="btn btn-danger" (click)="deleteScreen()">Remove Screen</button></div>
+						</div>
+					</div>
 				</div>
+
+
+
+
+				<!-- EDIT MODULES -->
+				<div class="card mb-3" *ngIf="editing_event>=0 && editing_screen<0">
+					<div class="card-body">
+						<h3>{{cur_actions.name}}</h3>
+						<div class="row mt-3">
+							<!-- Seconds -->
+							<div class="col-md-2" *ngIf="cur_actions.id==1">
+								<div class="form-group">
+									<label for="seconds">Seconds</label>
+									<input type="number" class="form-control" name="seconds" [(ngModel)]="cur_actions.seconds" (ngModelChange)="secondsChanged($event)">
+								</div>
+							</div>
+
+							<!-- Timer -->
+							<div class="col-md-2" *ngIf="cur_actions.id==3">
+								<div class="form-group">
+									<label for="timer">Seconds</label>
+									<input type="number" class="form-control" name="timer" [(ngModel)]="cur_actions.timer" (ngModelChange)="timerChanged($event)">
+								</div>
+							</div>
+
+							<!-- Add Points -->
+							<div class="col-md-4" *ngIf="cur_actions.id==7">
+								<div class="form-group">
+									<label for="add"># of Points to add to Point Value</label>
+									<input type="number" class="form-control" name="add" [(ngModel)]="cur_actions.add" (ngModelChange)="addChanged($event)">
+								</div>
+							</div>
+
+
+
+							<!-- Give players x card if they have < x cards -->
+							<div class="col-md-3" *ngIf="cur_actions.id==130">
+								<div class="form-group">
+									<label for="give_num">Give # of Cards</label>
+									<input type="number" class="form-control" name="give_num" [(ngModel)]="cur_actions.give_num" (ngModelChange)="giveChanged($event)">
+								</div>
+							</div>
+							<div class="col-md-3" *ngIf="cur_actions.id==130">
+								<div class="form-group">
+									<label for="lt_cards">Have Less than # Cards</label>
+									<input type="number" class="form-control" name="lt_cards" [(ngModel)]="cur_actions.lt_cards" (ngModelChange)="giveChanged($event)">
+								</div>
+							</div>
+						</div>
+
+
+						<div class="row">
+							<div class="col-md-6"><button class="btn btn-primary" (click)="doneEditing()">Done</button></div>
+							<div class="col-md-6 text-right"><button class="btn btn-danger" (click)="deleteAction()">Remove Module</button></div>
+						</div>
+						<!-- new row? -->
+					</div>
+				</div>
+
+
 
 				<!-- NOT EDITING ITEM -->
 				<div class="card" *ngIf="!editing_item">
@@ -145,5 +307,4 @@
 			</div>
 		</div>
 	</div>
-
 </div>

@@ -1,4 +1,4 @@
-import { GamePlaylist, GameLists, GameScreens } from './../../../shared/models/manage/games';
+import { GamePlaylist, GameLists, GameScreens, GameScreenActions, ThemesList } from './../../../shared/models/manage/games';
 import { ActivatedRoute } from '@angular/router';
 import { GamesService } from './../../../services/manage/games.service';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
@@ -15,37 +15,44 @@ import { SortablejsOptions } from 'angular-sortablejs';
 })
 export class GameComponent implements OnInit {
 	myForm:FormGroup;
+	themes:ThemesList[];
 	error_msg:string;
 	saveLabel:string = 'Save Changes';
 	loading:boolean = true;	
   formState:string = 'init';
   playlist:GamePlaylist;
-  editing_screen:number = 0;
-  editing_event:number = 0;
+  editing_screen:number = -1;
+	editing_event:number = -1;
+	cur_screen:GameScreens;
+	cur_actions:GameScreenActions;
+	action_parent_id:number;
   playlist_options = new GameLists();
   options: SortablejsOptions = {
     group:  { name : 'group1', pull: "clone", put: false, revertClone: false },
 		animation: 150,
 		onAdd:(event) => {
-			setTimeout(() => { this.playlist_options = new GameLists(); }, 100);
+			setTimeout(() => { 
+				this.playlist_options = new GameLists();
+				this.doneEditing();
+			}, 100);
 		}
   };
   options2: SortablejsOptions = {
     group:  { name : 'group2', pull: "clone", put: false, revertClone: true },
 		animation: 150
-  };
+	};
+	repeat_list:object = ['None', 'Have all players be a Judge', 'Repeat Till All Answers Given', 'Repeat Till Player Wins'];
+
+
 
   constructor(
 		private fb:FormBuilder,
 		private gameServ:GamesService,
 		private activatedRoute:ActivatedRoute
-	) {
-		// setInterval(()=>{
-		// 	console.log(this.playlist_options);
-		// }, 6000);
-	 }
+	) { }
 
 	ngOnInit() {
+		// Game Form
 		this.myForm = this.fb.group({
 			id:[''],
 			game_name:['', [
@@ -60,7 +67,8 @@ export class GameComponent implements OnInit {
 			this.gameServ.getGame( paramsId.id ).subscribe(res => {
         let game_data = res.data.game;
 				this.playlist = JSON.parse(game_data.playlist);
-
+				this.themes = res.data.themes;
+				
 				// check if empty
         if(Object.keys(this.playlist).length === 0 && this.playlist.constructor === Object) this.playlist = new GamePlaylist();	
 				
@@ -87,6 +95,50 @@ export class GameComponent implements OnInit {
   
 
 
+
+
+	secondsChanged(e){
+		this.cur_actions.name = 'Wait '+e+' Seconds';
+	}
+	timerChanged(e){
+		this.cur_actions.name = 'Start Timer ('+e+' sec)';
+	}
+	addChanged(e){
+		this.cur_actions.name = 'Add '+e+' to Point Value';
+	}
+	giveChanged(){
+		if(this.cur_actions.id==130) this.cur_actions.name = 'Give All Players '+this.cur_actions.give_num+' Card(s)';
+		if(this.cur_actions.id==131) this.cur_actions.name = 'Give All Players '+this.cur_actions.give_num+' Card(s) If They Have Less < '+this.cur_actions.lt_cards+' Cards';
+	}
+
+
+	editScreen(index:number){
+		this.editing_screen = index;
+		this.editing_event = -1;
+		this.cur_screen = this.playlist.screens[index];
+	}
+
+	deleteScreen(){		
+		this.playlist.screens.splice(this.editing_screen, 1);
+		this.editing_screen = -1;
+	}
+
+
+	editAction(index:number, parent_id:number){
+		this.cur_actions = this.playlist.screens[parent_id].actions[index];
+		this.editing_event = index;
+		this.editing_screen = -1;
+		this.action_parent_id = parent_id;
+	}
+	deleteAction(){		
+		this.playlist.screens[this.action_parent_id].actions.splice(this.editing_event, 1)
+		this.editing_event = -1;
+	}
+
+	doneEditing(){
+		this.editing_screen = -1;
+		this.editing_event = -1;
+	}
 
 
   saveForm(){
@@ -118,7 +170,7 @@ export class GameComponent implements OnInit {
 	}
 	private resetSave(){
 		this.formState = 'init';
-		this.saveLabel = 'SAVE';
+		this.saveLabel = 'Save Changes';
 	}	
 	private saveSuccess(){
 		this.formState = 'success';
