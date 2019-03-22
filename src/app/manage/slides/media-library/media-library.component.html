@@ -17,7 +17,7 @@
       <div class="row mb-3">
         <div class="col-md-6">
           <ngx-uploadcare-widget
-						images-only="true"
+						images-only="false"
 						system-dialog="true"
             public-key="ccfa756f426c375c3e98"
 						(on-upload-complete)="uploadComplete($event)">
@@ -27,7 +27,16 @@
       </div>
       <div class="row">
         <div class="col-md-2 mb-3" *ngFor="let file of files; let i = index">
-          <img src="{{ file.file_url }}-/resize/160x/" class="img-fluid" alt="" (click)="useMediaFile(file.file_url)">
+          <img src="{{ file.file_url }}-/resize/160x/" 
+            class="img-fluid" 
+            (click)="useMediaFile(file.file_url)"
+            [ngbTooltip]="file.file_name"
+            *ngIf="file.type=='image'">
+          <img src="/assets/imgs/icon_sound.png" 
+            class="img-fluid" 
+            (click)="useMediaFile(file.file_url, file.file_name)" 
+            [ngbTooltip]="file.file_name"
+            *ngIf="file.type=='sound'">
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { MediaLibraryComponent } from './../media-library/media-library.componen
 import { SlideComponent } from './../slide/slide.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { bgLayer } from './../../../shared/models/manage/slides';
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, SimpleChanges, OnChanges } from '@angular/core';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UcWidgetComponent } from 'ngx-uploadcare-widget';
 
@@ -11,9 +11,10 @@ import { UcWidgetComponent } from 'ngx-uploadcare-widget';
 	templateUrl: './slide-details.component.html',
 	styleUrls: ['./slide-details.component.scss']
 })
-export class SlideDetailsComponent implements OnInit {
+export class SlideDetailsComponent implements OnInit, OnChanges {
 	@ViewChild(UcWidgetComponent) up_care: UcWidgetComponent;
 	@Input() layer:bgLayer;
+  @Input() device:string;
 	myForm:FormGroup;
 
 	constructor(
@@ -23,6 +24,15 @@ export class SlideDetailsComponent implements OnInit {
 		) { }
 
 	ngOnInit() {
+		this.updateLayerForm();
+
+		
+		this.myForm.valueChanges.subscribe(val => {
+			this.updateLayer(val);
+		});  
+	}
+
+	updateLayerForm(){
 		let text_val = (this.layer.text>'')?this.layer.text:'Default Text';
 
 		this.myForm = this.fb.group({
@@ -31,6 +41,7 @@ export class SlideDetailsComponent implements OnInit {
 				Validators.minLength(2)
 			]],
 			img_url:[this.layer.img_url],
+			sound_url:[this.layer.sound_url],
 			text:[text_val, [
 				Validators.required,
 				Validators.minLength(2)
@@ -39,14 +50,14 @@ export class SlideDetailsComponent implements OnInit {
 			anchorY:[this.layer.anchorY],
 			width:[this.layer.width],
 			height:[this.layer.height],
+			fit_screen:[this.layer.fit_screen],
 			font:[this.layer.font],
 			font_size:[this.layer.font_size]
 		});
+	}
 
-		
-		this.myForm.valueChanges.subscribe(val => {
-			this.updateLayer(val);
-		});    
+	ngOnChanges(changes: SimpleChanges) {
+		this.updateLayerForm();
 	}
 
 	// Getters
@@ -66,7 +77,14 @@ export class SlideDetailsComponent implements OnInit {
 
 	openMediaLibrary():void {
 		this.modalServ.open(MediaLibraryComponent, {size:'lg'}).result.then((result) => {
-			if(result>'') this.slideComp.settings.layers[this.slideComp.cur_layer].img_url = result;
+			if(result.url>'' && this.slideComp.settings.layers[this.slideComp.cur_layer].type=='sound'){
+				this.myForm.patchValue({ 
+					sound_url: result.url,
+					layer_name:'SOUND: '+result.name
+				});
+			} else if(result.url>'') {
+				this.myForm.patchValue({ img_url: result.url });
+			}
 			this.slideComp.updateAniLayer();
 
 		}, (reason) => {
@@ -81,17 +99,13 @@ export class SlideDetailsComponent implements OnInit {
 	}
 
 
-	updateLayer(val):void {
+	updateLayer(val:bgLayer):void {
+		console.log('test');
+		for(let o in val){
+			this.slideComp.settings.layers[this.slideComp.cur_layer][o] = val[o];
+		}
 		if(this.layer.type=='text') this.slideComp.settings.layers[this.slideComp.cur_layer].layer_name = "Text: \""+val.text+"\"";
 		else this.slideComp.settings.layers[this.slideComp.cur_layer].layer_name = val.layer_name;
-		this.slideComp.settings.layers[this.slideComp.cur_layer].img_url = val.img_url;
-		this.slideComp.settings.layers[this.slideComp.cur_layer].text = val.text;
-		this.slideComp.settings.layers[this.slideComp.cur_layer].anchorX = val.anchorX;
-		this.slideComp.settings.layers[this.slideComp.cur_layer].anchorY = val.anchorY;
-		this.slideComp.settings.layers[this.slideComp.cur_layer].width = val.width;
-		this.slideComp.settings.layers[this.slideComp.cur_layer].height = val.height;
-		this.slideComp.settings.layers[this.slideComp.cur_layer].font = val.font;
-		this.slideComp.settings.layers[this.slideComp.cur_layer].font_size = val.font_size;
 		this.slideComp.updateAniLayer();
 		
 	}

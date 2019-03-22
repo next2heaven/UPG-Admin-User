@@ -137,12 +137,12 @@
 						</div>
 
 						<!-- Repeat -->
-						<div class="row mt-3">
+						<div class="row mt-3" *ngIf="cur_screen.id==1">
 							<div class="col-md-4">
 								<div class="form-group">
-									<label for="theme_name">Theme</label>
+									<label for="theme_id">Theme</label>
 									<div class="ui-select">
-										<select id="special_repeat" class="form-control" name="theme_name" [(ngModel)]="cur_screen.theme_name">
+										<select id="special_repeat" class="form-control" name="theme_id" [(ngModel)]="cur_screen.theme_id">
 											<option value="">Choose...</option>
 											<option *ngFor="let item of themes" [value]="item.id">{{item.theme_name}}</option>
 										</select>
@@ -170,6 +170,15 @@
 											<span class="default"></span>
 										</label>
 									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<!-- Number of Questions -->
+							<div class="col-md-3" *ngIf="cur_screen.id==4 || cur_screen.id==5">
+								<div class="form-group">
+									<label for="num_questions"># of Questions</label>
+									<input type="number" class="form-control" name="num_questions" [(ngModel)]="cur_screen.num_questions" (ngModelChange)="numQuestionsChanged($event)">
 								</div>
 							</div>
 						</div>
@@ -205,7 +214,7 @@
 							</div>
 
 							<!-- Add Points -->
-							<div class="col-md-4" *ngIf="cur_actions.id==7">
+							<div class="col-md-4" *ngIf="cur_actions.id==30">
 								<div class="form-group">
 									<label for="add"># of Points to add to Point Value</label>
 									<input type="number" class="form-control" name="add" [(ngModel)]="cur_actions.add" (ngModelChange)="addChanged($event)">

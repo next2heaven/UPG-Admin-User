@@ -17,19 +17,36 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 export class SlideComponent implements OnInit {
 	@ViewChild('slide_animation') slide_animation:SlideAnimationComponent;  
 	@ViewChild('tabs') public tabs:NgbTabset;	
+	@ViewChild('temp_slide_type') public temp_slide_type:ElementRef;	
+	@ViewChild('temp_categories') public temp_categories:ElementRef;	
 	public cur_layer: number = -1;
 	public cur_keyframe: number = -1;
 	settings: AniBackground = new AniBackground();
 	timeline_time:number = 0;
 	timeline_paused:boolean = true;
 	timeline_per:number = 0;
-	timeline_total_time:number = 120;
+	timeline_total_time:number = 60;
+	device:string = 'ss';
 
 	myForm:FormGroup;
 	error_msg:string;
 	saveLabel:string = 'Save Changes';
 	loading:boolean = true;	
 	formState:string = 'init';
+
+	area_types:object = {
+		title:'Title Screen',
+		round:'Round Screen',
+		winning:'Winning Screen',
+		background:'Basckground',
+		mult_overlay:'Multiple Choice Overlay',
+		order:'Order Screen',
+		tf:'T/F Screen'
+	};
+	categories_list:object = {
+		history: 'History',
+		halloween: 'Halloween'
+	};
 
 
 	constructor(
@@ -43,8 +60,9 @@ export class SlideComponent implements OnInit {
 			id:[''],
 			slide_name:['', [
 				Validators.required,
-				Validators.minLength(6)
+				Validators.minLength(3)
 			]],
+			device:['ud'],
 			slide_type: new FormControl(null),
 			categories: new FormControl(null)
 		});
@@ -60,8 +78,7 @@ export class SlideComponent implements OnInit {
 					slide_settings = new AniBackground();
 				}
 				
-
-				this.myForm.setValue({
+				this.myForm.patchValue({
 					'id': slide_data.id,
 					'slide_name': slide_data.slide_name,
 					'slide_type': slide_data.slide_type.split(','),
@@ -138,7 +155,19 @@ export class SlideComponent implements OnInit {
 	}
 
 	addKey(pos):void {
+		// round pos
+		pos = pos.toFixed(1);
+
+		// get last key
+		let key_start_time = 0;
+		for(let key of this.settings.layers[this.cur_layer].keyframes){
+			if(key.delay<pos && pos>key_start_time) key_start_time = key.delay;
+		}
+
+		// add keyframe
 		let key = new LayerKeyProps();
+		if(this.settings.layers[this.cur_layer].type=='event') key.time = 0;
+		else key.time = pos-key_start_time;
 		key.delay = pos;
 		this.settings.layers[this.cur_layer].keyframes.unshift(key);
 		this.cur_keyframe = 0;
@@ -158,6 +187,7 @@ export class SlideComponent implements OnInit {
 
 
 	saveForm(){
+		console.log(this.temp_slide_type);
 
 		let save_settings:AniBackground = this.settings;
 		save_settings.layers.forEach(layer => {

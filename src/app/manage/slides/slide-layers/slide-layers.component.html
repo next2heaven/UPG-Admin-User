@@ -7,19 +7,38 @@
     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
       <button class="dropdown-item" (click)="addLayer('image')">Image</button>
       <button class="dropdown-item" (click)="addLayer('text')">Text</button>
+      <button class="dropdown-item" (click)="addLayer('sound')">Sound</button>
+      <button class="dropdown-item" (click)="addLayer('event')">Event</button>
       <button class="dropdown-item" (click)="addLayer('particles')">Particles</button>
+      <div class="dropdown-divider" role="separator"></div>
+      <button class="dropdown-item" (click)="addLayer('answers')">Answers</button>
+      <button class="dropdown-item" (click)="addLayer('input')">Input Box</button>
+      <button class="dropdown-item" (click)="addLayer('reorder')">Reorder list</button>
+      <button class="dropdown-item" (click)="addLayer('letters')">Type Letters</button>
+      <button class="dropdown-item" (click)="addLayer('player_tag')">Player Tag</button>
     </div>
   </div>
 </div>
- 
+
+<div class="text-center mt-4">
+  <a 
+    href="javascript:void(0);" 
+    *ngIf="allow_import && device=='ss'"
+    (click)="importLayers()">Import From Users Device</a>
+</div>
+
+
 <!-- Layers -->
 <ul class="list-group pt-2" 
   *ngIf="layers"
   [sortablejs]="layers"
   [sortablejsOptions]="dnd_options">
+
   <li class="list-group-item"
     *ngFor="let layer of layers; index as i" 
+    [hidden]="layer.device !== device"
     (click)="editLayer(i)"
     [class.list-group-item-success]="cur_layer===i"
     >{{ layer?.layer_name }}</li>
+
 </ul>

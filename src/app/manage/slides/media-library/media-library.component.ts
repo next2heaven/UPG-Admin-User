@@ -27,14 +27,13 @@ export class MediaLibraryComponent implements OnInit {
         this.files = res.data.media;
       }
 
-			this.loading = false;			
+			this.loading = false;
 		});
   }
 
 
   uploadComplete(e):void {
 		let url = e.cdnUrl;
-		
 		this.slideServ.saveMedia({
       file_url: url,
       area:'slides'
@@ -57,8 +56,12 @@ export class MediaLibraryComponent implements OnInit {
   }
   
 
-  useMediaFile(file_url):void {
-    this.activeModal.close(file_url);
+  useMediaFile(file_url:string, file_name:string):void {
+    let result:object = {
+      url:file_url,
+      name:file_name
+    };
+    this.activeModal.close(result);
   }
 
 

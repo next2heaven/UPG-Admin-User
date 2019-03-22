@@ -3,6 +3,8 @@ import { Component, OnInit, ViewChild, ElementRef, Input, OnChanges, SimpleChang
 import { TimelineMax } from 'gsap/all';
 import { Sprite, Text, Point } from 'pixi.js';
 import { EventEmitter } from '@angular/core';
+import { DrawThings } from './drawThings';
+import { DrawImage } from './parts/drawImage';
 
 declare var TweenMax: any;
 declare var PIXI: any; 
@@ -18,18 +20,25 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 	@Input() is_paused:boolean = true;
 	@Input() timeline_time:number = 0;
 	@Output() percent_changed = new EventEmitter();
-	@Input() tl_max_time:number = 120;
+	@Input() tl_max_time:number = 60;
+	@Input() device:string;
+	drawThings:DrawThings;
 	pApp: any; 
 	main_tl:TimelineMax;
 	per:number;
 	tl_max_time_ref:any;
+	cur_width:number = 375;
+	cur_height:number = 667;
+	last_timeline:TimelineMax;
 
 	constructor() { }
 
 	ngOnInit() {
 		PIXI.settings.GC_MODES = PIXI.GC_MODES.AUTO;
-		this.pApp = new PIXI.Application({ width: 960, height: 540, antialias: true, transparent: false });
+		this.pApp = new PIXI.Application({ width: 375, height: 667, antialias: true, transparent: false });
 		this.pixi_container.nativeElement.appendChild(this.pApp.view);
+
+		this.drawThings = new DrawThings(this.pApp);
 
 		// ready main timeline
 		this.main_tl = new TimelineMax({
@@ -41,13 +50,16 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 		this.redrawAll();	
 	}
 
-	ngOnChanges(changes:SimpleChanges):void {
+	ngOnChanges(changes:SimpleChanges):void {	
 		if(changes.is_paused && this.main_tl){
-			if(this.is_paused) this.main_tl.pause();
-			else this.main_tl.play();	
+			if(this.is_paused){
+				this.main_tl.pause();
+				this.stopSound();
+
+			} else this.main_tl.play();	
 		} else if(changes.tl_max_time){
 			this.updateTimelineTotalTime();
-		}
+		} else if(changes.device) this.redrawAll();
 	}
 
 	private timelineUpdated = (event: any) => {
@@ -68,64 +80,28 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 
 
 	redrawAll():void {
-		this.layers.forEach(layer => {
-			this.animateLayer(layer);
-		});
-	}
+		if(this.device=='ud'){
+			this.cur_width = 375;
+			this.cur_height = 667;
+		} else if(this.device=='ss'){
+			this.cur_width = 960;
+			this.cur_height = 540;
+		}
+		this.drawThings.setCurWH(this.cur_width, this.cur_height);
+		this.pApp.renderer.resize(this.cur_width, this.cur_height);
 
-
-	// DRAWIMAGE
-	drawImage(layer):any {
-		let sprite: Sprite = PIXI.Sprite.fromImage(layer.img_url);
-		sprite.x = 50;
-		sprite.y = 50;
-		sprite.scale.set(.5, .5);
-
-		// Pivot
-		sprite.anchor.set(layer.anchorX, layer.anchorY);
-
-		this.pApp.stage.addChild(sprite);
-
-		return sprite;
-	}
-
-
-	// DRAW TEXT
-	drawText(layer):any {
-		var container = new PIXI.Container();
-		this.pApp.stage.addChild(container);
-
-		// draw box
-		var graphics = new PIXI.Graphics();
-		graphics.lineStyle(2, 0xFF0000);
-		var w = layer.width * layer.anchorX;
-		var h = layer.height * layer.anchorY;
-		graphics.drawRect(w*-1, h*-1, layer.width, layer.height);
-		container.addChild(graphics);
-
+		// Kill objects
+		for (var i = this.pApp.stage.children.length - 1; i >= 0; i--) {	
+			this.pApp.stage.removeChild(this.pApp.stage.children[i]);
+		};
 		
-		// Add text
-		let text = new PIXI.Text(this.getText(layer.text), this.updateTextProps(layer));
-		container.addChild(text);
 
-		// Pivot
-		text.anchor.set(layer.anchorX, layer.anchorY);
-
-
-		return container;
-	}
-
-
-
-	updateTextProps(layer){
-		let prop:any = {};
-		prop.fontFamily = layer.font;
-		prop.fontSize = layer.font_size;
-		prop.fill = layer.color;
-		prop.align = 'center';
-		prop.wordWrap = true;
-    prop.wordWrapWidth = layer.width;
-		return prop;
+		let asset_id:number = 0;
+		this.layers.forEach(layer => {
+			asset_id++;
+			layer.id = 'asset_'+asset_id;
+			if(this.device==layer.device) this.animateLayer(layer);
+		});
 	}
 
 
@@ -136,66 +112,88 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 		this.main_tl.remove(ref);
 	}
 	
-	animateLayer(layer):void {
+	animateLayer(layer:bgLayer):void {
 		// remove timeline object from main timeline
 		if(layer.tl_ref) this.removeLayer(layer.tl_ref);
 		if(layer.ref) this.removeLayer(layer.ref);
 		//myRenderer.textureGC.run();
 
+		if(layer.type=="image") this.drawThings.drawImage(layer);
+		if(layer.type=="text") layer.ref = this.drawThings.drawText(layer);
+		if(layer.type=="answers") layer.ref = this.drawThings.drawAnswers(layer);
+		if(layer.type=="sound") layer.ref = this.drawThings.loadSound(layer);
 
-		if(layer.type=="image") layer.ref = this.drawImage(layer);
-		if(layer.type=="text") layer.ref = this.drawText(layer);
-
+		// Kill timeline
+		if(this.last_timeline){
+			console.log('kill last tl');
+			this.last_timeline.kill();
+			this.last_timeline = null;
+		}
 
 		// Create a timeline
-		let tl = new TimelineMax();
+		let tl:TimelineMax = new TimelineMax();
+		this.last_timeline = tl;
 		this.main_tl.add(tl, 0);
 		layer.tl_ref = tl;
-		
+
 		// Add keyframe animations
 		layer.keyframes.forEach(key => {
-			let props = {
-				x: key.x,
-				y: key.y,
-				delay: key.delay - key.time,
-				ease: eval(key.ease.replace('_', '.')),
-				alpha: key.alpha,
-				rotation: (key.rot * (Math.PI / 180))	// have to convert to radians
+			if(layer.type=='event'){
+				tl.addCallback(this.eventCallback, key.time, ["EVENT: "+key.event]);
+
+			} else if(layer.type=='sound'){
+				tl.addCallback(this.soundCallback, key.delay, [layer.id]);
+
+			} else {
+				let props = {
+					x: (key.x/100)*this.cur_width,
+					y: (key.y/100)*this.cur_height,
+					delay: key.delay - key.time,
+					ease: eval(key.ease.replace('_', '.')),
+					alpha: key.alpha,
+					rotation: (key.rot * (Math.PI / 180))	// have to convert to radians
+				}
+
+				// Normal Properties
+				tl.to(layer.ref, key.time, props, 0);
+
+				// Scale
+				let newScaleX = ((key.scaleX - 1) / 2)+1;
+				let newScaleY = ((key.scaleY - 1) / 2)+1;
+				tl.to(layer.ref, key.time, { pixi: { scaleX:newScaleX, scaleY:newScaleY }}, (key.delay - key.time));
 			}
-
-			// Normal Properties
-			tl.to(layer.ref, key.time, props, 0);
-
-			// Scale
-			//tl.to(layer.ref.scale, key.time, { x:2, y:2 }, 0);
-			let newScaleX = ((key.scaleX - 1) / 2)+1;
-			let newScaleY = ((key.scaleY - 1) / 2)+1;
-			tl.to(layer.ref, key.time, { pixi: { scaleX:newScaleX, scaleY:newScaleY }}, (key.delay - key.time));
 			
 			
 		});
-		tl.seek(this.timeline_time);		
+		tl.seek(this.timeline_time);
 	}
 
 
 
 
 
-	getText(txt) {
-		txt = txt.replace('{question}', 'This is a question that will go to multiple lines and be pretty long?');
-		txt = txt.replace('{answer1}', 'Sweet');
-		txt = txt.replace('{answer2}', 'Michael Jackson');
-		txt = txt.replace('{answer3}', 'Huckle Berry Finn');
-		txt = txt.replace('{answer4}', 'The University of Utah Gymnastics');
-		txt = txt.replace('{roundNum}', '2');
-		return txt;
+	eventCallback(event_name):void {
+		console.log(event_name);
 	}
-
-
+	soundCallback(sound_id:string):void {
+		console.log('Play sound', sound_id);
+		PIXI.sound.play(sound_id);
+	}
 
 
 
   updateTimelinePos(sec):void {
     this.main_tl.seek(sec);
-  }
+	}
+	
+
+	stopSound():void {
+		this.layers.forEach(layer => {
+			if(this.device==layer.device){
+				if(layer.type=='sound'){
+					layer.ref.pause();
+				}
+			}
+		});
+	}
 }

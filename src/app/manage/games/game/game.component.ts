@@ -110,6 +110,10 @@ export class GameComponent implements OnInit {
 		if(this.cur_actions.id==130) this.cur_actions.name = 'Give All Players '+this.cur_actions.give_num+' Card(s)';
 		if(this.cur_actions.id==131) this.cur_actions.name = 'Give All Players '+this.cur_actions.give_num+' Card(s) If They Have Less < '+this.cur_actions.lt_cards+' Cards';
 	}
+	numQuestionsChanged(){
+		if(this.cur_screen.id==4) this.cur_screen.screen_name = 'Question & Answer ('+this.cur_screen.num_questions+'x)';
+		if(this.cur_screen.id==5) this.cur_screen.screen_name = 'Question ('+this.cur_screen.num_questions+'x)';
+	}
 
 
 	editScreen(index:number){

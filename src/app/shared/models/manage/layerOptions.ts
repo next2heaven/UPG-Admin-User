@@ -1,4 +1,4 @@
-export class EaseFunc {
+export class layerOptions {
 
 	getList():any {
 		return {
@@ -24,5 +24,12 @@ export class EaseFunc {
 			'Back_easeOut': 'Back Out',
 			'Back_easeInOut': 'Back In/Out'
 		}
+	}
+
+	getEventsList():any {
+		return {
+			'next_screen': 'Next Screen',
+			'give_cards': 'Give All Players Cards'
+		};
 	}
 }

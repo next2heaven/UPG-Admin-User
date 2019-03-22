@@ -14,14 +14,15 @@ export class SlideTimelineComponent implements OnInit, OnChanges, OnDestroy, Aft
   @Input() timeline_time:number;
   @Input() is_paused:boolean = true;
   @Input() timeline_per:number = 0;
+  @Input() device:string;
   @ViewChild('layer_list') layer_list: ElementRef;
   @ViewChild('timeline_arrow') timeline_arrow: ElementRef;
   @ViewChild('timeline_times') timeline_times: ElementRef;
   @ViewChild('tl_total_time') tl_total_time: ElementRef;
 
   offsetX:number = 0;
-  total_time:number = 120;
-  last_time:number = 120;
+  total_time:number = 60;
+  last_time:number = 60;
   time_pos:number = 0;
   layers_height:number = 0;
   time_percent:number = 0;

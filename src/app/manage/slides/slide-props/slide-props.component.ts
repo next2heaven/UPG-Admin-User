@@ -1,8 +1,8 @@
 import { SlideComponent } from './../slide/slide.component';
-import { LayerKeyProps } from './../../../shared/models/manage/slides';
+import { LayerKeyProps, bgLayer } from './../../../shared/models/manage/slides';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { EaseFunc } from 'src/app/shared/models/manage/easeFunc';
+import { layerOptions } from 'src/app/shared/models/manage/layerOptions';
 
 @Component({
   selector: 'app-slide-props',
@@ -11,12 +11,15 @@ import { EaseFunc } from 'src/app/shared/models/manage/easeFunc';
 })
 export class SlidePropsComponent implements OnInit, OnChanges {
   @Input() props:LayerKeyProps;
+  @Input() layer:bgLayer;
   @Input() cur_layer:number = -1;
   @Input() cur_keyframe:number = -1;
+  @Input() device:string;
   myForm:FormGroup;
   loading:boolean = true;
-  easeFunc: EaseFunc = new EaseFunc();
-  easeList:any = this.easeFunc.getList();
+  layerOpts: layerOptions = new layerOptions();
+  easeList:any = this.layerOpts.getList();
+  eventsList:any = this.layerOpts.getEventsList();
 
   constructor(
     private fb:FormBuilder,
@@ -50,7 +53,8 @@ export class SlidePropsComponent implements OnInit, OnChanges {
       alpha:[this.props.alpha],
       rot:[this.props.rot],
       ease:[this.props.ease],
-      ending:[this.props.ending]
+      ending:[this.props.ending],
+      event:[this.props.event]
       // anchorX:[this.props.anchorX],
       // anchorY:[this.props.anchorY]
       // transformOrigin:[''],

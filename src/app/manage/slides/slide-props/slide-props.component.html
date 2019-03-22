@@ -8,40 +8,40 @@
           [ngClass]="{'is-invalid':delay.invalid && delay.touched}">
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" [hidden]="layer.type=='event' || layer.type=='sound'">
       <div class="form-group" class="text-center">
         <label for="X">Time</label>
         <input type="number" class="form-control text-center" formControlName="time" value="0"
           [ngClass]="{'is-invalid':time.invalid && time.touched}">
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" [hidden]="layer.type=='event' || layer.type=='sound'">
       <div class="form-group" class="text-center">
-        <label for="x">X</label>
-        <input type="number" class="form-control text-center" formControlName="x" value="0"
+        <label for="x">X%</label>
+        <input type="text" class="form-control text-center" formControlName="x" value="0"
           [ngClass]="{'is-invalid':x.invalid && x.touched}">
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" [hidden]="layer.type=='event' || layer.type=='sound'">
       <div class="form-group" class="text-center">
-        <label for="X">Y</label>        
-        <input type="number" class="form-control text-center" formControlName="y" value="0"
+        <label for="X">Y%</label>        
+        <input type="text" class="form-control text-center" formControlName="y" value="0"
           [ngClass]="{'is-invalid':y.invalid && y.touched}">
       </div>
     </div>
   </div>
 
-  <div class="row mt-2">
+  <div class="row mt-2" [hidden]="layer.type=='event' || layer.type=='sound'">
     <div class="col-md-3">
       <div class="form-group" class="text-center">
         <label for="scaleX">Scale X</label>
-        <input type="number" class="form-control text-center" formControlName="scaleX" value="0">
+        <input type="text" class="form-control text-center" formControlName="scaleX" value="0">
       </div>
     </div>
     <div class="col-md-3">
       <div class="form-group" class="text-center">
         <label for="scaleY">Scale Y</label>
-        <input type="number" class="form-control text-center" formControlName="scaleY" value="0">
+        <input type="text" class="form-control text-center" formControlName="scaleY" value="0">
       </div>
     </div>
     <div class="col-md-3">
@@ -52,7 +52,7 @@
     </div>
   </div>
 
-  <div class="row mt-2">
+  <div class="row mt-2" [hidden]="layer.type=='event' || layer.type=='sound'">
     <div class="col-md-4">
       <div class="form-group" class="text-center">
         <label for="rot">Rot</label>
@@ -78,6 +78,18 @@
     </div>
   </div>
 
+
+  <div class="row mt-3" [hidden]="layer.type!=='event' || layer.type=='sound'">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label for="scaleX">Event</label>
+        <select class="form-control" formControlName="event">
+          <option value="">Choose...</option>
+          <option *ngFor="let event of eventsList | keyvalue" value="{{ event.key }}">{{ event.value }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
 <!-- 
   
     <div class="col-md-4">

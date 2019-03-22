@@ -21,7 +21,8 @@
       #tl_total_time
       [(ngModel)]="total_time"
       (ngModelChange)="updateTotalTime($event)"
-      style="width:50px;">
+      style="width:50px;"
+      class="text-center">
   </div>
 </div>
   
@@ -52,11 +53,10 @@
     <div class="timeline_time" *ngIf="total_time >= 300" [style.left.%]="((300/total_time)*100) || 0">5:00</div>
   </div>
 </div>
-
 <div class="mb-5 pb-5" #layer_list>
-  <div class="row timeline_row" [class.active]="cur_layer===item_i" *ngFor="let item of layers; index as item_i">
+  <div class="row timeline_row" [class.active]="cur_layer===item_i" *ngFor="let item of layers; index as item_i" [hidden]="item.device !== device">
     <div class="col-md-2 top5">
-      <div class="ml-2">
+      <div class="ml-2 nowrap">
         <a (click)="updateCurLayer(item_i)" [routerLink]="">{{ item.layer_name }}</a>
       </div>
     </div>
@@ -77,7 +77,6 @@
       </div>
     </div>
   </div>
-
   <!-- <div class="row timeline_row active">
     <div class="col-md-2 top5">
       <div class="ml-2">Layer Name 3</div>

@@ -2,19 +2,43 @@
 <h3><fa-icon [icon]="['fas', 'chevron-circle-left']" [fixedWidth]="true" (click)="clickedDone($event)"></fa-icon>Layer Details</h3>
 
 <form [formGroup]="myForm">
-	<div class="form-group mt-3" *ngIf="layer.type==='image'">
+
+	<div class="form-group mt-3">
 		<label for="layer_name" class="col-form-label">Layer Name:</label>
 		<input type="text" class="form-control" formControlName="layer_name" value=""
 			[ngClass]="{'is-invalid':layer_name.invalid && layer_name.touched}">
 	</div>
 
-	<div class="form-group" [hidden]="layer.type!=='image'">
-		<input type="hidden" formControlName="img_url">
-		<button 
-			class="btn btn-info"
-			(click)="openMediaLibrary()">CHOOSE MEDIA</button>
+	<!-- IMAGE -->
+	<div class="form-group row" [hidden]="layer.type!=='image'">
+		<div class="col-md-8">
+			<input type="hidden" formControlName="img_url">
+			<button 
+				class="btn btn-info"
+				(click)="openMediaLibrary()">CHOOSE MEDIA</button>
+		</div>
+		<div class="col-md-4 text-right" *ngIf="layer?.img_url && layer?.img_url>''"><img src="{{layer.img_url}}" alt="" height="40"></div>
 	</div>
 
+
+	<!-- SOUND -->
+	<div class="form-group row" [hidden]="layer.type!=='sound'">
+		<div class="col-md-8">
+			<input type="hidden" formControlName="sound_url">
+			<button 
+				class="btn btn-info"
+				(click)="openMediaLibrary()">CHOOSE MEDIA</button>
+		</div>
+		<div class="col-md-4 text-right" *ngIf="layer?.sound_url && layer?.sound_url>''">
+			<img src="/assets/imgs/icon_sound.png" alt="" height="40">
+		</div>
+	</div>
+
+
+
+
+
+	<!-- TEXT -->
 	<div class="row mt-3">
 		<div class="col-md-11">
 			<div class="form-group" [hidden]="layer.type!=='text'">
@@ -42,32 +66,45 @@
 		</div>
 	</div>
 
-	<div class="row mt-3">
-		<div class="col-md-3">
+	<div class="row mt-3" [hidden]="layer.type=='event' || layer.type=='sound'">
+		<div class="col-md-6">
 			<div class="form-group" class="text-center">
 				<label for="anchorX">Anchor X</label>
-				<input type="number" class="form-control text-center" formControlName="anchorX" value=".5">
+				<input type="text" class="form-control text-center" formControlName="anchorX" value=".5">
 			</div>
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-6">
 			<div class="form-group" class="text-center">
 				<label for="anchorY">Anchor Y</label>
-				<input type="number" class="form-control text-center" formControlName="anchorY" value=".5">
-			</div>
-		</div>
-		<div class="col-md-3">
-			<div class="form-group" class="text-center">
-				<label for="width">Width</label>
-				<input type="number" class="form-control text-center" formControlName="width" value="400">
-			</div>
-		</div>
-		<div class="col-md-3">
-			<div class="form-group" class="text-center">
-				<label for="height">Height</label>
-				<input type="number" class="form-control text-center" formControlName="height" value="100">
+				<input type="text" class="form-control text-center" formControlName="anchorY" value=".5">
 			</div>
 		</div>
 	</div>
+	<div class="row mt-3" [hidden]="fit_screen.checked || (layer.type!=='text' && layer.type!=='image')">
+		<div class="col-md-6">
+			<div class="form-group" class="text-center">
+				<label for="width">Width %</label>
+				<input type="text" class="form-control text-center" formControlName="width" value="100">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group" class="text-center">
+				<label for="height">Height %</label>
+				<input type="text" class="form-control text-center" formControlName="height" value="100">
+			</div>
+		</div>
+	</div>
+	<div class="row mt-3" [hidden]="layer.type!=='image'">
+		<div class="col-md-12">
+			<div class="custom-control custom-checkbox">
+				<input type="checkbox" class="custom-control-input" id="fit_screen" formControlName="fit_screen" #fit_screen>
+				<label class="custom-control-label" for="fit_screen">Fit to Screen</label>
+			</div>
+		</div>
+	</div>
+
+
+
 
 	<div class="row mt-3" [hidden]="layer.type!=='text'">
 		<div class="col-md-8">
@@ -82,7 +119,7 @@
 		<div class="col-md-4">
 			<div class="form-group">
 				<label for="font_size">Font Size</label>
-				<input type="number" class="form-control text-center" formControlName="font_size" value="24">
+				<input type="text" class="form-control text-center" formControlName="font_size" value="24">
 			</div>
 		</div>
 	</div>

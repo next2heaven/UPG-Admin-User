@@ -1,3 +1,4 @@
+import { KeysPipe } from './pipes/keys.pipe';
 import { CheckboxGroupComponent } from './shared/components/checkbox-group.component';
 import { CheckboxComponent } from './shared/components/checkbox.component';
 import { DraggableScrollContainerDirective } from 'angular-draggable-droppable/lib/draggable-scroll-container.directive';
@@ -74,7 +75,8 @@ library.add(fas, far);
     CheckboxComponent,
     CheckboxGroupComponent,
     GamesComponent,
-    GameComponent
+    GameComponent,
+    KeysPipe
   ],
   imports: [
     HttpClientModule,

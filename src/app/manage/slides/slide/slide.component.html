@@ -1,128 +1,182 @@
 <div style="width:1282px; margin:30px auto 0 auto;">
-	<h1>Manage Animated Background</h1>
-	
-	<!-- LOADING -->
-	<div class="text-center" *ngIf="loading" @fade>			
-		<img src="/assets/imgs/loading.svg" alt="" style="max-width:200px;">
-	</div>
-
-
-	<div [hidden]="loading">
-		<form [formGroup]="myForm">
-			<div class="form-group row mt-5">
-				<label for="slide_name" class="col-sm-3 col-form-label text-right">Background Name:</label>
-				<div class="col-sm-3">
-					<input type="text" class="form-control" autofocus="autofocus" formControlName="slide_name" value=""
-						[ngClass]="{'is-invalid':slide_name.invalid && slide_name.touched}">
-					<div class="invalid-feedback" *ngIf="slide_name.invalid">Password must be at least 6 characters</div>
-				</div>
-
-				<div class="col-sm-3">
-					<div ngbDropdown class="d-inline-block" [autoClose]="true">
-						<button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Type</button>
-						<div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-							<checkbox-group formControlName="slide_type">
-								<button class="dropdown-item"><checkbox value="round">Round Screen</checkbox></button>
-								<button class="dropdown-item"><checkbox value="background">Background</checkbox></button>
-								<button class="dropdown-item"><checkbox value="mult_overlay">Multiple Choice Overlay</checkbox></button>
-								<button class="dropdown-item"><checkbox value="order_overlay">Order Items Overlay</checkbox></button>
-								<button class="dropdown-item"><checkbox value="tf_overlay">True or False Overlay</checkbox></button>
-							</checkbox-group>
-						</div>
-
-						<div ngbDropdown class="d-inline-block ml-2" [autoClose]="false">
-							<button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Categories</button>
-							<div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-								<checkbox-group formControlName="categories">
-									<button class="dropdown-item"><checkbox value="history">History</checkbox></button>
-									<button class="dropdown-item"><checkbox value="kids">Kids</checkbox></button>
-									<button class="dropdown-item"><checkbox value="Music">Music</checkbox></button>
-									<button class="dropdown-item"><checkbox value="movies">Movies</checkbox></button>
-									<button class="dropdown-item"><checkbox value="tv">TV</checkbox></button>
-									<button class="dropdown-item"><checkbox value="science">Science</checkbox></button>
-									<button class="dropdown-item"><checkbox value="sports">Sports</checkbox></button>
-									<button class="dropdown-item"><checkbox value="video_game">Video Game</checkbox></button>
-								</checkbox-group>
-							</div>
-						</div>
+	<form [formGroup]="myForm">
+		<div class="row">
+			<div class="col-md-7">
+				<h1>Manage Animated Background</h1>
+			</div>
+			<div class="col-md-5">
+				<div class="text-right">	
+					<div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="device">
+						<label ngbButtonLabel class="btn-primary">
+							<input ngbButton type="radio" value="ud"> Users Device
+						</label>
+						<label ngbButtonLabel class="btn-primary">
+							<input ngbButton type="radio" value="ss"> Second Screen
+						</label>
 					</div>
 				</div>
-				
-				<div class="col-sm-3 text-right">
-					<input type="hidden" name="id" formControlName="id">
-					<button 
-						type="button" class="btn btn-lg btn-primary" value="{{ saveLabel }}"
-						[disabled]="myForm.invalid || formState!=='init'"
-						(click)="saveForm()"
-						[ngClass]="{
-							'btn-primary': formState!=='error',
-							'btn-danger': formState==='error'
-						}">
-							<fa-icon [icon]="['fas', 'spinner']" [spin]="true" *ngIf="formState==='saving'" class="mr-2"></fa-icon>
-							<fa-icon [icon]="['fas', 'exclamation-circle']" *ngIf="formState==='error'" class="mr-2"></fa-icon>
-							{{ saveLabel }}</button>
-				</div>
-			</div>
-		</form>
-
-
-
-
-
-			
-		<!-- Tab Menu -->
-		<div class="row mt-2">
-			<div class="col-md-3">
-				<!-- Layers -->
-				<div id="tab-layers" *ngIf="!loading && settings.layers" [hidden]="cur_layer!==-1">
-					<app-slide-layers 
-						[layers]="settings.layers"
-						></app-slide-layers>
-				</div>
-
-
-				<!-- Layer Details -->
-				<div id="tab-actions" *ngIf="cur_layer!==-1" [hidden]="cur_keyframe!==-1">
-					<app-slide-details 
-						[layer]="settings.layers[cur_layer]"
-						></app-slide-details>
-				</div>
-
-
-				<!-- Keyframe Props -->
-				<div id="tab-props" *ngIf="cur_keyframe!==-1">
-					<app-slide-props
-						[props]="settings.layers[cur_layer].keyframes[cur_keyframe]"
-						[cur_layer]="cur_layer"
-						[cur_keyframe]="cur_keyframe"></app-slide-props>
-				</div>
-			</div>
-
-
-
-			<!-- CANVAS -->
-			<div class="col-md-9" *ngIf="!loading && settings.layers">
-				<app-slide-animation
-					#slide_animation
-					[layers]="settings.layers"
-					[is_paused]="timeline_paused"
-					[timeline_time]="timeline_time"
-					[tl_max_time]="timeline_total_time"
-					(percent_changed)="timeline_per_update($event)"
-					></app-slide-animation>
 			</div>
 		</div>
 
-		<div *ngIf="!loading && settings.layers">
-			<app-slide-timeline
-				[layers]="settings.layers"
-				[timeline_time]="timeline_time"
-				[cur_keyframe]="cur_keyframe"
-				[cur_layer]="cur_layer"
-				[is_paused]="timeline_paused"
-				[timeline_per]="timeline_per"></app-slide-timeline>
+		<!-- LOADING -->
+		<div class="text-center" *ngIf="loading" @fade>			
+			<img src="/assets/imgs/loading.svg" alt="" style="max-width:200px;">
 		</div>
-	</div>
+
+		<div [hidden]="loading">
+
+			<ngb-tabset class="mt-5">
+
+				<!-- SETTINGS TAB -->
+				<ngb-tab title="Settings">
+					<ng-template ngbTabContent>
+
+						<div class="form-group row mt-2">
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label for="slide_name" class="col-form-label">Background Name:</label>
+									<input type="text" class="form-control" autofocus="autofocus" formControlName="slide_name" value=""
+										[ngClass]="{'is-invalid':slide_name.invalid && slide_name.touched}">
+									<div class="invalid-feedback" *ngIf="slide_name.invalid">Password must be at least 6 characters</div>
+								</div>
+								<!-- <div class="form-group">
+									<span class="switch switch-sm">
+										<input type="checkbox" class="switch" id="switch-sm" formControlName="second_screen">
+										<label for="switch-sm">Second Screen</label>
+									</span>
+								</div> -->
+							</div>
+
+							<div class="col-sm-4">
+								<label for="" class="col-form-label">Screen Types:</label>
+								<!-- <div class="form-group" *ngFor="let type of area_types | keys; let i = index;">
+									<span class="switch switch-sm">
+										<input type="checkbox" class="switch" name="areas[]" [value]="type" [id]="'areas_'+i">
+										<label [for]="'areas_'+i">{{area_types[type]}}</label>
+									</span>
+								</div> -->
+								<div class="form-group">
+									<div class="custom-control custom-checkbox" *ngFor="let type of area_types | keys; let i = index">
+										<input type="checkbox" 
+											class="custom-control-input" 
+											[id]="'areas_'+i"
+											name="temp_slide_type" 
+											[value]="type"
+											#temp_slide_type>
+										<label class="custom-control-label" [for]="'areas_'+i">{{area_types[type]}}</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<label for="" class="col-form-label">Screen Types:</label>
+								<!-- <div class="form-group" *ngFor="let type of area_types | keys; let i = index;">
+									<span class="switch switch-sm">
+										<input type="checkbox" class="switch" name="areas[]" [value]="type" [id]="'areas_'+i">
+										<label [for]="'areas_'+i">{{area_types[type]}}</label>
+									</span>
+								</div> -->
+								<div class="form-group">
+									<div class="custom-control custom-checkbox" *ngFor="let category of categories_list | keys; let i = index">
+										<input type="checkbox" 
+											class="custom-control-input" 
+											[id]="'cat_'+i" 
+											name="temp_categories" 
+											[value]="category" 
+											#temp_categories>
+										<label class="custom-control-label" [for]="'cat_'+i">{{categories_list[category]}}</label>
+									</div>
+								</div>
+							</div>
+						
+							<div class="col-sm-3">
+								<input type="hidden" name="id" formControlName="id">
+								<input type="hidden" formControlName="slide_type"> 
+								<input type="hidden" formControlName="categories"> 
+								<button 
+									type="button" class="btn btn-lg btn-primary" value="{{ saveLabel }}"
+									[disabled]="myForm.invalid || formState!=='init'"
+									(click)="saveForm()"
+									[ngClass]="{
+										'btn-primary': formState!=='error',
+										'btn-danger': formState==='error'
+									}">
+										<fa-icon [icon]="['fas', 'spinner']" [spin]="true" *ngIf="formState==='saving'" class="mr-2"></fa-icon>
+										<fa-icon [icon]="['fas', 'exclamation-circle']" *ngIf="formState==='error'" class="mr-2"></fa-icon>
+										{{ saveLabel }}</button>
+							</div>
+						</div>
+					</ng-template>
+				</ngb-tab>
+
+				<ngb-tab title="Animation">
+					<ng-template ngbTabContent>
+						<!-- Tab Menu -->
+						<div class="row mt-2">
+							<div class="col-md-3">
+								<!-- Layers -->
+								<div id="tab-layers" *ngIf="!loading && settings.layers" [hidden]="cur_layer!==-1">
+									<app-slide-layers 
+										[layers]="settings.layers"
+										[device]="myForm.value['device']"
+										></app-slide-layers>
+								</div>
+
+
+								<!-- Layer Details -->
+								<div id="tab-actions" *ngIf="cur_layer!==-1" [hidden]="cur_keyframe!==-1">
+									<app-slide-details 
+										[layer]="settings.layers[cur_layer]"
+										[device]="myForm.value['device']"
+										></app-slide-details>
+								</div>
+
+
+								<!-- Keyframe Props -->
+								<div id="tab-props" *ngIf="cur_keyframe!==-1">
+									<app-slide-props
+										[layer]="settings.layers[cur_layer]"
+										[props]="settings.layers[cur_layer].keyframes[cur_keyframe]"
+										[cur_layer]="cur_layer"
+										[cur_keyframe]="cur_keyframe"
+										[device]="myForm.value['device']"
+										></app-slide-props>
+								</div>
+							</div>
+
+
+
+							<!-- CANVAS -->
+							<div class="col-md-9" *ngIf="!loading && settings.layers">
+								<app-slide-animation
+									#slide_animation
+									[layers]="settings.layers"
+									[is_paused]="timeline_paused"
+									[timeline_time]="timeline_time"
+									[tl_max_time]="timeline_total_time"
+									(percent_changed)="timeline_per_update($event)"
+									[device]="myForm.value['device']"
+									></app-slide-animation>
+							</div>
+						</div>
+
+						<div *ngIf="!loading && settings.layers">
+							<app-slide-timeline
+								[layers]="settings.layers"
+								[timeline_time]="timeline_time"
+								[cur_keyframe]="cur_keyframe"
+								[cur_layer]="cur_layer"
+								[is_paused]="timeline_paused"
+								[device]="myForm.value['device']"
+								[timeline_per]="timeline_per"
+								></app-slide-timeline>
+						</div>
+					</ng-template>
+				</ngb-tab>
+			</ngb-tabset>		
+		
+		</div>
+
+	</form>
 </div> 
 
 
