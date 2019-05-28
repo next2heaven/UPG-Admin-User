@@ -69,7 +69,6 @@ export class GameLists {
 		{ id:21, type:'action', icon:'eye', iconr:'hand-paper', name:'Reveal Team Answers', class_name:'Wait' },
 		{ id:22, type:'action', icon:'eye', iconr:'', name:'Reveal Judges Answer', class_name:'Wait' },
 		{ id:30, type:'action', icon:'eye', iconr:'', name:'Add 100 to Point Value', add:100, class_name:'Wait' }
-
 	];
 
 	device:GameScreenActions[] = [
@@ -80,10 +79,12 @@ export class GameLists {
 		{ id:121, type:'device', icon:'mobile-alt', iconr:'clock', name:'Other Teams Vote', class_name:'Wait' },
 		{ id:130, type:'device', icon:'mobile-alt', iconr:'clock', name:'Give All Players 5 Card(s)', give_num:5, class_name:'Wait' },
 		{ id:131, type:'device', icon:'mobile-alt', iconr:'clock', name:'Give All Players 1 Card If They Have Less < 5 Cards', give_num:1, lt_cards:5, class_name:'Wait' }
+		
 	];
 
 	events:GameScreenActions[] = [
 		{ id:200, type:'event', icon:'clock', iconr:'hand-paper', name:'Wait for all players to answer or time to run out', class_name:'Wait' },
-		{ id:201, type:'event', icon:'clock', iconr:'hand-paper', name:'Wait for Judge to choose favorite card', class_name:'Wait' }
+		{ id:201, type:'event', icon:'clock', iconr:'hand-paper', name:'Wait for Judge to choose favorite card', class_name:'Wait' },
+		{ id:202, type:'event', icon:'clock', iconr:'hand-paper', name:'Wait for users to join', class_name:'Wait' }
 	];
 }

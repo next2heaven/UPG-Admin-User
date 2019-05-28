@@ -33,9 +33,11 @@ export class MediaLibraryComponent implements OnInit {
 
 
   uploadComplete(e):void {
+    console.log(e);
 		let url = e.cdnUrl;
 		this.slideServ.saveMedia({
       file_url: url,
+      full_file_url:url + e.name,
       area:'slides'
 
     }).subscribe( res => {

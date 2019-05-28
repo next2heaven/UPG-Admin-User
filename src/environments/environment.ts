@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  api_endpoint: 'http://upg-api:8888'
+  api_endpoint: 'http://upg-api:8888',
+  colors: [0x2095c2, 0x89ba2a, 0xfd7158, 0xd52e74, 0xf9b02f],
+  colorsHex: ['#2095c2', '#89ba2a', '#fd7158', '#d52e74', '#f9b02f']
 };
 
 /*

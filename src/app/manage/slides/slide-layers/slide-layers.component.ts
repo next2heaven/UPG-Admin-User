@@ -46,10 +46,11 @@ export class SlideLayersComponent implements OnInit, OnChanges {
     obj.device = this.device;
     obj.keyframes.push(new LayerKeyProps());
     
-		this.layers.unshift(obj);    
+		this.layers.unshift(obj);
     this.slideComp.settings.layers = this.layers;
 
     if(layerType!=='event') this.editLayer(0);
+    this.slideComp.redrawAnimation();
     this.slideComp.addedLayer(this.slideComp.settings.layers[0]);
 	}
 

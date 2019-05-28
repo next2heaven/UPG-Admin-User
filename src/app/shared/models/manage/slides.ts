@@ -1,3 +1,4 @@
+import { environment } from '../../../../environments/environment';
 export class AniBackground {
 	layers: bgLayer[] = [];
 }
@@ -9,17 +10,19 @@ export class bgLayer {
 	device:string = 'ud';
 	layer_name: string = '';
 	type: string = '';
-	img_url: string = '';
-	sound_url: string = '';
+	asset_url: string = '';
 	text: string = 'Default Text';
 	anchorX: number = .5;
 	anchorY: number = .5;
-	width: number = 800;
-	height: number = 200;
+	width: number = 80;
+	height: number = 30;
 	fit_screen: boolean = false;
 	color:string = '#ffffff';
+	bg_color:string = environment.colorsHex[0];
 	font:string = 'Arial';
 	font_size:number = 24;
+	onclick:string = '';
+	display:string = 'all';
 	keyframes: LayerKeyProps[] = [];
 	offset:number = 0;
 }
@@ -39,4 +42,10 @@ export class LayerKeyProps {
 	ease: string = 'Power3.easeInOut';
 	ending: boolean = false;
 	event:string = '';
+}
+
+
+
+export class CategoriesSet {
+	c:string = '';
 }

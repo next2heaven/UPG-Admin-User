@@ -29,7 +29,7 @@
         <div class="col-md-2 mb-3" *ngFor="let file of files; let i = index">
           <img src="{{ file.file_url }}-/resize/160x/" 
             class="img-fluid" 
-            (click)="useMediaFile(file.file_url)"
+            (click)="useMediaFile(file.full_file_url)"
             [ngbTooltip]="file.file_name"
             *ngIf="file.type=='image'">
           <img src="/assets/imgs/icon_sound.png" 

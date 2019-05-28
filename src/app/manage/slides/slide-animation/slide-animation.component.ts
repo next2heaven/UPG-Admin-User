@@ -1,10 +1,8 @@
 import { bgLayer } from './../../../shared/models/manage/slides';
 import { Component, OnInit, ViewChild, ElementRef, Input, OnChanges, SimpleChanges, Output } from '@angular/core';
 import { TimelineMax } from 'gsap/all';
-import { Sprite, Text, Point } from 'pixi.js';
 import { EventEmitter } from '@angular/core';
 import { DrawThings } from './drawThings';
-import { DrawImage } from './parts/drawImage';
 
 declare var TweenMax: any;
 declare var PIXI: any; 
@@ -16,10 +14,13 @@ declare var PIXI: any;
 })
 export class SlideAnimationComponent implements OnInit, OnChanges {
 	@ViewChild('pixi_container') pixi_container: ElementRef;
+  @Input() cur_layer:number;
+  @Input() cur_keyframe:number;
 	@Input() layers:bgLayer[];
 	@Input() is_paused:boolean = true;
 	@Input() timeline_time:number = 0;
 	@Output() percent_changed = new EventEmitter();
+	@Output() updated_xy = new EventEmitter();
 	@Input() tl_max_time:number = 60;
 	@Input() device:string;
 	drawThings:DrawThings;
@@ -30,6 +31,8 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 	cur_width:number = 375;
 	cur_height:number = 667;
 	last_timeline:TimelineMax;
+	obj_data:any;
+	dragging:boolean;
 
 	constructor() { }
 
@@ -60,6 +63,7 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 		} else if(changes.tl_max_time){
 			this.updateTimelineTotalTime();
 		} else if(changes.device) this.redrawAll();
+		else if(changes.cur_layer) this.redrawAll();
 	}
 
 	private timelineUpdated = (event: any) => {
@@ -98,9 +102,14 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 
 		let asset_id:number = 0;
 		this.layers.forEach(layer => {
+			layer.id = 'asset_'+(asset_id+1);
+			if(this.device==layer.device){
+				this.drawLayer(layer, asset_id);
+				setTimeout(()=>{
+					this.animateLayer(layer);
+				}, 50);
+			}	
 			asset_id++;
-			layer.id = 'asset_'+asset_id;
-			if(this.device==layer.device) this.animateLayer(layer);
 		});
 	}
 
@@ -112,23 +121,38 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 		this.main_tl.remove(ref);
 	}
 	
-	animateLayer(layer:bgLayer):void {
+	drawLayer(layer:bgLayer, asset_id:number):void {
+
 		// remove timeline object from main timeline
 		if(layer.tl_ref) this.removeLayer(layer.tl_ref);
 		if(layer.ref) this.removeLayer(layer.ref);
 		//myRenderer.textureGC.run();
 
-		if(layer.type=="image") this.drawThings.drawImage(layer);
-		if(layer.type=="text") layer.ref = this.drawThings.drawText(layer);
-		if(layer.type=="answers") layer.ref = this.drawThings.drawAnswers(layer);
-		if(layer.type=="sound") layer.ref = this.drawThings.loadSound(layer);
+		if(layer.type=="image") layer.ref = this.drawThings.drawImage(layer);
+		else if(layer.type=="button") layer.ref = this.drawThings.drawButton(layer);
+		else if(layer.type=="text") layer.ref = this.drawThings.drawText(layer);
+		else if(layer.type=="answers") layer.ref = this.drawThings.drawAnswers(layer);
+		else if(layer.type=="sound") layer.ref = this.drawThings.loadSound(layer);
+		else if(layer.type=="joined_players") layer.ref = this.drawThings.joinedPlayers(layer);
+		//else if(layer.type=="start_game") layer.ref = this.drawThings.startGameButton(layer);
+
+		
+		// Make object Draggable
+		if(asset_id==this.cur_layer 
+				&& this.cur_keyframe>-1
+				&& layer.type!='sound'
+				&& layer.fit_screen!=true){
+			this.makeInteractive(layer);
+		}
 
 		// Kill timeline
 		if(this.last_timeline){
-			console.log('kill last tl');
 			this.last_timeline.kill();
 			this.last_timeline = null;
 		}
+	}
+
+	animateLayer(layer:bgLayer):void {
 
 		// Create a timeline
 		let tl:TimelineMax = new TimelineMax();
@@ -146,8 +170,8 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 
 			} else {
 				let props = {
-					x: (key.x/100)*this.cur_width,
-					y: (key.y/100)*this.cur_height,
+					x: (key.x*this.cur_width) / 100,
+					y: (key.y*this.cur_height) / 100,
 					delay: key.delay - key.time,
 					ease: eval(key.ease.replace('_', '.')),
 					alpha: key.alpha,
@@ -160,10 +184,11 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 				// Scale
 				let newScaleX = ((key.scaleX - 1) / 2)+1;
 				let newScaleY = ((key.scaleY - 1) / 2)+1;
-				tl.to(layer.ref, key.time, { pixi: { scaleX:newScaleX, scaleY:newScaleY }}, (key.delay - key.time));
+				tl.to(layer.ref, key.time, { 
+					pixi: { scaleX:newScaleX, scaleY:newScaleY },
+					delsy:(key.delay - key.time)
+				}, 0);
 			}
-			
-			
 		});
 		tl.seek(this.timeline_time);
 	}
@@ -172,13 +197,17 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 
 
 
+	// CALLBACKS
 	eventCallback(event_name):void {
 		console.log(event_name);
 	}
+
 	soundCallback(sound_id:string):void {
 		console.log('Play sound', sound_id);
 		PIXI.sound.play(sound_id);
 	}
+
+
 
 
 
@@ -195,5 +224,38 @@ export class SlideAnimationComponent implements OnInit, OnChanges {
 				}
 			}
 		});
+	}
+
+
+
+
+
+	makeInteractive(layer:bgLayer):void { 
+		layer.ref.interactive = true;
+		layer.ref.buttonMode = true;
+		layer.ref.on('mousedown', (e) => { this.obj_data = e.data; this.dragging = true; })
+			.on('touchstart', (e) => { this.obj_data = e.data; this.dragging = true; })
+			// events for drag end
+			.on('mouseup', (e) => { this.obj_data = null; this.dragging = false; })
+			.on('mouseupoutside', (e) => { this.obj_data = null; this.dragging = false; })
+			.on('touchend', (e) => { this.obj_data = null; this.dragging = false; })
+			.on('touchendoutside', (e) => { this.obj_data = null; this.dragging = false; })
+			// events for drag move
+			.on('mousemove', (e)=>{
+				if (this.dragging && e.target){
+					var newPosition = this.obj_data.getLocalPosition( e.target.parent );
+					e.target.position.x = newPosition.x;
+					e.target.position.y = newPosition.y;
+					this.updated_xy.emit({
+						x:this.round((newPosition.x/this.cur_width) * 100, 1),
+						y:this.round((newPosition.y/this.cur_height) * 100, 1)
+					});	
+				}
+			});
+	}
+
+	round(value:number, precision:number):number {
+    var multiplier = Math.pow(10, precision || 0);
+    return Math.round(value * multiplier) / multiplier;
 	}
 }

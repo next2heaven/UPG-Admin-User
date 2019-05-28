@@ -1,7 +1,7 @@
 import { SlideComponent } from './../slide/slide.component';
 import { LayerKeyProps, bgLayer } from './../../../shared/models/manage/slides';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { layerOptions } from 'src/app/shared/models/manage/layerOptions';
 
 @Component({
@@ -12,6 +12,7 @@ import { layerOptions } from 'src/app/shared/models/manage/layerOptions';
 export class SlidePropsComponent implements OnInit, OnChanges {
   @Input() props:LayerKeyProps;
   @Input() layer:bgLayer;
+  @Input() keyxy:object;
   @Input() cur_layer:number = -1;
   @Input() cur_keyframe:number = -1;
   @Input() device:string;
@@ -37,7 +38,10 @@ export class SlidePropsComponent implements OnInit, OnChanges {
 
 
 
-  ngOnChanges() {
+  ngOnChanges(changes:SimpleChanges) {
+    if(changes.keyxy && changes.keyxy.firstChange==false){
+      this.myForm.patchValue(changes.keyxy.currentValue);
+    }
     this.resetForm();      
   }
 

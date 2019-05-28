@@ -191,7 +191,7 @@
 
 
 
-
+				
 				<!-- EDIT MODULES -->
 				<div class="card mb-3" *ngIf="editing_event>=0 && editing_screen<0">
 					<div class="card-body">
@@ -248,13 +248,12 @@
 				</div>
 
 
-
 				<!-- NOT EDITING ITEM -->
-				<div class="card" *ngIf="!editing_item">
+				<div class="card" *ngIf="editing_screen<0 && editing_event<0">
 					<div class="card-body">
 						<div class="row">
 							<div class="col-md-4" >
-								<h5 class="card-title">Screens {{playlist_options.screens?.length}}</h5>
+								<h5 class="card-title">Screens</h5>
 								<div [sortablejs]="playlist_options?.screens" [sortablejsOptions]="options">
 									<div *ngFor="let item of playlist_options?.screens">
 										<div class="block_screen rad10">

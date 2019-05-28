@@ -47,51 +47,47 @@
 								</div> -->
 							</div>
 
-							<div class="col-sm-4">
-								<label for="" class="col-form-label">Screen Types:</label>
-								<!-- <div class="form-group" *ngFor="let type of area_types | keys; let i = index;">
-									<span class="switch switch-sm">
-										<input type="checkbox" class="switch" name="areas[]" [value]="type" [id]="'areas_'+i">
-										<label [for]="'areas_'+i">{{area_types[type]}}</label>
-									</span>
-								</div> -->
+							<div class="col-sm-2">
 								<div class="form-group">
-									<div class="custom-control custom-checkbox" *ngFor="let type of area_types | keys; let i = index">
-										<input type="checkbox" 
-											class="custom-control-input" 
-											[id]="'areas_'+i"
-											name="temp_slide_type" 
-											[value]="type"
-											#temp_slide_type>
-										<label class="custom-control-label" [for]="'areas_'+i">{{area_types[type]}}</label>
-									</div>
+									<label for="" class="col-form-label">Screen Types:</label>								
+									<select class="form-control" formControlName="screen_type">
+										<option value="">Choose...</option>
+										<option *ngFor="let screen of screen_types | keyvalue" value="{{ screen.key }}">{{ screen.value }}</option>
+									</select>
 								</div>
 							</div>
-							<div class="col-sm-4">
-								<label for="" class="col-form-label">Screen Types:</label>
-								<!-- <div class="form-group" *ngFor="let type of area_types | keys; let i = index;">
-									<span class="switch switch-sm">
-										<input type="checkbox" class="switch" name="areas[]" [value]="type" [id]="'areas_'+i">
-										<label [for]="'areas_'+i">{{area_types[type]}}</label>
-									</span>
-								</div> -->
-								<div class="form-group">
-									<div class="custom-control custom-checkbox" *ngFor="let category of categories_list | keys; let i = index">
-										<input type="checkbox" 
-											class="custom-control-input" 
-											[id]="'cat_'+i" 
-											name="temp_categories" 
-											[value]="category" 
-											#temp_categories>
-										<label class="custom-control-label" [for]="'cat_'+i">{{categories_list[category]}}</label>
-									</div>
-								</div>
-							</div>
+						</div>
+
+
 						
+						<div class="form-group row mt-2">
+
+							<!-- CATEGORIES -->
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label for="" class="col-form-label"><strong>Categories</strong></label>	
+									<div class="row ml-2">
+										<div formArrayName="categories" 
+											*ngFor="let cat of myForm.controls.categories.controls; let i = index" 
+											(change)="updateCheckboxes()"
+											class="col-md-3">
+											<div class="custom-control custom-checkbox">
+												<input type="checkbox" class="custom-control-input" [id]="'c'+i" [formControlName]="i">
+												<label class="custom-control-label" [for]="'c'+i">{{categories[i].label}}</label>
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="form-group row mt-2">
 							<div class="col-sm-3">
 								<input type="hidden" name="id" formControlName="id">
-								<input type="hidden" formControlName="slide_type"> 
-								<input type="hidden" formControlName="categories"> 
+								<!-- <input type="hidden" formControlName="slide_type"> 
+								<input type="hidden" formControlName="categories">  -->
 								<button 
 									type="button" class="btn btn-lg btn-primary" value="{{ saveLabel }}"
 									[disabled]="myForm.invalid || formState!=='init'"
@@ -134,6 +130,7 @@
 								<!-- Keyframe Props -->
 								<div id="tab-props" *ngIf="cur_keyframe!==-1">
 									<app-slide-props
+										[keyxy]="keyxy"
 										[layer]="settings.layers[cur_layer]"
 										[props]="settings.layers[cur_layer].keyframes[cur_keyframe]"
 										[cur_layer]="cur_layer"
@@ -149,11 +146,14 @@
 							<div class="col-md-9" *ngIf="!loading && settings.layers">
 								<app-slide-animation
 									#slide_animation
+									[cur_layer]="cur_layer"
+									[cur_keyframe]="cur_keyframe"
 									[layers]="settings.layers"
 									[is_paused]="timeline_paused"
 									[timeline_time]="timeline_time"
 									[tl_max_time]="timeline_total_time"
 									(percent_changed)="timeline_per_update($event)"
+									(updated_xy)="adjustKeyXY($event)"
 									[device]="myForm.value['device']"
 									></app-slide-animation>
 							</div>

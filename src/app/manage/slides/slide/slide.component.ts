@@ -1,11 +1,11 @@
 import { ActivatedRoute } from '@angular/router';
 import { SlideAnimationComponent } from './../slide-animation/slide-animation.component';
 import { fadeIn } from './../../../animations';
-import { AniBackground, bgLayer, LayerKeyProps } from './../../../shared/models/manage/slides';
+import { AniBackground, LayerKeyProps, CategoriesSet } from './../../../shared/models/manage/slides';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 import { SlidesService } from './../../../services/manage/slides.service';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 
 
 @Component({
@@ -27,6 +27,10 @@ export class SlideComponent implements OnInit {
 	timeline_per:number = 0;
 	timeline_total_time:number = 60;
 	device:string = 'ss';
+	keyxy:object;
+  categories = [];
+	slide_data;
+	selectedCategoryIds;
 
 	myForm:FormGroup;
 	error_msg:string;
@@ -34,18 +38,13 @@ export class SlideComponent implements OnInit {
 	loading:boolean = true;	
 	formState:string = 'init';
 
-	area_types:object = {
+	screen_types:object = {
 		title:'Title Screen',
 		round:'Round Screen',
 		winning:'Winning Screen',
-		background:'Basckground',
-		mult_overlay:'Multiple Choice Overlay',
+		mult_choice:'Multiple Choice',
 		order:'Order Screen',
 		tf:'T/F Screen'
-	};
-	categories_list:object = {
-		history: 'History',
-		halloween: 'Halloween'
 	};
 
 
@@ -63,15 +62,15 @@ export class SlideComponent implements OnInit {
 				Validators.minLength(3)
 			]],
 			device:['ud'],
-			slide_type: new FormControl(null),
-			categories: new FormControl(null)
+			screen_type:[''],
+			categories: new FormArray([])
 		});
 
 		this.activatedRoute.params.subscribe(paramsId => {
 
 			this.slideServ.getSlide( paramsId.id ).subscribe(res => {
-				let slide_data = res.data.slide;
-				let slide_settings = JSON.parse(slide_data.settings);
+				this.slide_data = res.data.slide;
+				let slide_settings = JSON.parse(this.slide_data.settings);
 
 				// check if empty
 				if(Object.keys(slide_settings).length === 0 && slide_settings.constructor === Object){
@@ -79,14 +78,21 @@ export class SlideComponent implements OnInit {
 				}
 				
 				this.myForm.patchValue({
-					'id': slide_data.id,
-					'slide_name': slide_data.slide_name,
-					'slide_type': slide_data.slide_type.split(','),
-					'categories': slide_data.categories.split(',')
+					'id': this.slide_data.id,
+					'slide_name': this.slide_data.slide_name,
+					'screen_type': this.slide_data.screen_type
 				});
+
+				this.categories = res.data.categories;
+
+
+				this.addCategories();
+
 				this.settings = slide_settings;
 	
 				this.loading = false;
+
+				this.updateCheckboxes();
 			});
 
 		});
@@ -94,12 +100,17 @@ export class SlideComponent implements OnInit {
 		
 	}
 
-
 	// GETs
 	get slide_name(){ return this.myForm.get('slide_name'); }
 
 
-
+	addCategories() {
+		this.categories.map((o, i) => {
+			let check = (this.slide_data.categories && this.slide_data.categories.indexOf(o.id) > -1)?true:false;
+			const control = new FormControl(check);
+			(this.myForm.controls.categories as FormArray).push(control);
+		});
+	}
 
 
 	setLayers(layers):void{
@@ -119,6 +130,7 @@ export class SlideComponent implements OnInit {
 	}
 
 	updateAniLayer():void {
+		this.slide_animation.drawLayer(this.settings.layers[this.cur_layer], 0);
 		this.slide_animation.animateLayer(this.settings.layers[this.cur_layer]);
 	}
 
@@ -182,12 +194,25 @@ export class SlideComponent implements OnInit {
 	}
 
 
+	adjustKeyXY(xy:object):void {
+		this.keyxy = xy;
+	}
+
+
+
+
+
+	updateCheckboxes():void {
+		this.selectedCategoryIds = this.myForm.value.categories
+			.map((v, i) => v ? this.categories[i].id : null)
+			.filter(v => v !== null);
+	}
 
 
 
 
 	saveForm(){
-		console.log(this.temp_slide_type);
+    this.updateCheckboxes();
 
 		let save_settings:AniBackground = this.settings;
 		save_settings.layers.forEach(layer => {
@@ -200,8 +225,8 @@ export class SlideComponent implements OnInit {
 			this.slideServ.saveSlide({
 				id: this.myForm.get('id').value,
 				slide_name: this.myForm.get('slide_name').value,
-				slide_type: this.myForm.get('slide_type').value.toString(),
-				categories: this.myForm.get('categories').value.toString(),
+				screen_type: this.myForm.get('screen_type').value,
+				categories: this.selectedCategoryIds,
 				settings: save_settings,
 				live: 1
 			}).subscribe( res => {
@@ -238,5 +263,6 @@ export class SlideComponent implements OnInit {
 		this.saveLabel = 'Form Error';
 		setTimeout(() => { this.resetSave(); }, 4000);
 	}
+	
 	
 }
